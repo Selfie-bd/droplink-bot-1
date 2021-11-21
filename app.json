@@ -1,0 +1,30 @@
+{
+"name": "All-In-One-TG-Bot",
+  "description": "Telegram's best All-In-One-TG-Bot",
+  "keywords": [
+    "telegram",
+    "best",
+    "DropLink-Bot"
+  ],
+  "success_url": "https://t.me/DForDarkAngel",
+  "website": "https://github.com/freecontent/droplink-bot",
+  "repository": "https://github.com/freecontent/droplink-bot",
+  "env": {
+    "BOT_TOKEN": {
+      "description": "Your bot token, as a string.",
+      "value": ""
+    },
+    "APP_ID": {
+      "description": "Get this value from https://my.telegram.org",
+      "value": ""
+    },
+    "API_HASH": {
+      "description": "Get this value from https://my.telegram.org",
+      "value": ""
+    },
+    "SUDO_USERS": {
+      "description": "allow only pre-defined users to use this bot",
+      "value": "1532971861"
+    }
+  }
+}
