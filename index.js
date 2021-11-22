@@ -6,7 +6,13 @@ const axios = require('axios');
 const path = require('path');
 
 const { Client } = require('pg');
-
+const client = new Client({
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
+    port: process.env.DBPORT
+});
 
 client.connect();
 
