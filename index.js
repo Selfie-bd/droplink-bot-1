@@ -6,14 +6,7 @@ const axios = require('axios');
 const path = require('path');
 
 const { Client } = require('pg');
-const client = new Client({
-    host: 'ec2-18-208-97-23.compute-1.amazonaws.com',
-    user: 'pamtcqktcecmyb',
-    password: '51ca24c01af487cc33e99e5488bacc82d1d176ae7e55d1f0e2f43c61041f66dd',
-    database: 'd51cks1n66f7gd',
-    port: 5432,
-    ssl: { rejectUnauthorized: false }
-});
+
 
 client.connect();
 
