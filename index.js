@@ -31,7 +31,7 @@ app.get('*', async (req, res) => {
     console.log('cryptID==', cryptID)
 
     if (cryptID) {
-        await client.query(`SELECT droplink FROM tg_droplink_data WHERE uniq_id = \'${cryptID}\'`, (err, result) => {
+        await client.query(`SELECT org_url FROM tg_droplink_data WHERE uniq_id = \'${cryptID}\'`, (err, result) => {
             if (err) {
                 console.log('errr', err);
                 return;
@@ -40,7 +40,7 @@ app.get('*', async (req, res) => {
                 console.log('results', result);
                 if (result.rows.length) {
                     res.render(path.join(__dirname + '/index.ejs'), {
-                        cryptID: cryptID
+                        url: `intent://${result.rows.org_url}#Intent;package=com.playit.videoplayer;action=android.intent.action.VIEW;scheme=http;type=video/mp4;end`
                     });
                 } else {
                     res.send('File is removed or something went wrong with the file. Please contact owner !!');
