@@ -207,7 +207,8 @@ bot.command('test', async (ctx) => {
         .on('end', function() {
             console.log('Screenshots taken');
             myScreenshots.forEach(ss => {
-                console.log('ss', ss)
+                console.log('ss', ss);
+                console.log('length', myScreenshots.length)
                 ctx.replyWithPhoto({ source : path.join(__dirname + `/downloads/${ss}`)});
             });
          })
