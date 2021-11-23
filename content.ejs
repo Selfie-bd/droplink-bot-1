@@ -1,41 +1,83 @@
 <div id="container">
-    <div id="content">
-      <div id="about">
-        <h1>
-          <div style='float:left; margin-bottom:44px;'>
-            Premium Videos
-          </div>
-          <div class="stage">
-            <div class="pyramid3d">
-              <div class="triangle side1"></div>
-              <div class="triangle side2"></div>
-              <div class="triangle side3"></div>
-              <div class="triangle side4"></div>
-            </div>
-          </div>
-        </h1>
-        <div style='clear:both'>
-        <h3 class="subhead">
-            Join my telegram channel to get all old and latest movies.
-            <div style="margin: 3% 4%;"> <a href="https://telegram.me/backuphotandsexyyvideos">Adult Channel</a> | <a href="https://telegram.me/oldandnewwmovie">Old & Latest Movies</a> </div>
-        </h3>
+  <div id="content">
+    <div id="about">
+      <h1 style="display: flex; flex-flow: row; justify-content: center;">
+        <div class="base-heading">
+          Premium Videos
         </div>
-        <div style="font-size: 1.6em; font-weight: 550; margin: 8% 0 12% 0;">
+        <div class="stage">
+          <div class="pyramid3d">
+            <div class="triangle side1"></div>
+            <div class="triangle side2"></div>
+            <div class="triangle side3"></div>
+            <div class="triangle side4"></div>
+          </div>
+        </div>
+      </h1>
+
+      <!-- image -->
+      <div class="slideshow-container">
+
+        <!-- Full-width images with number and caption text -->
+        <div class="mySlides fade">
+          <div class="numbertext">1 / 3</div>
+          <img src="https://www.w3schools.com/howto/img_mountains_wide.jpg" style="width:100%; height: 300px">
+          <div class="text">Caption Text</div>
+        </div>
+
+        <div class="mySlides fade">
+          <div class="numbertext">2 / 3</div>
+          <img src="https://www.w3schools.com/howto/img_lights_wide.jpg" style="width:100%; height: 300px">
+          <div class="text">Caption Two</div>
+        </div>
+
+        <div class="mySlides fade">
+          <div class="numbertext">3 / 3</div>
+          <img src="https://www.w3schools.com/howto/img_snow_wide.jpg" style="width:100%; height: 300px">
+          <div class="text">Caption Three</div>
+        </div>
+
+        <!-- Next and previous buttons -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+      </div>
+      <br>
+
+      <!-- The dots/circles -->
+      <div style="text-align:center">
+        <span class="dot" onclick="currentSlide(1)"></span>
+        <span class="dot" onclick="currentSlide(2)"></span>
+        <span class="dot" onclick="currentSlide(3)"></span>
+      </div>
+
+      <!-- video -->
+      <div style="margin: 5%">
+        <video id="my-video" style="width: 100%" class="video-js" controls preload="auto" height="300" data-setup="{}">
+          <source src="<%= video %>" type="video/mkv" />
+          <source src="<%= video %>" type="video/MKV" />
+          <source src="<%= video %>" type="video/mp4" />
+          <source src="<%= video %>" type="video/MP4" />
+          <source src="<%= video %>" type="video/webm" />
+          <source src="<%= video %>" type="video/WEBM" />
+          <source src="<%= video %>" type="video/avi" />
+          <source src="<%= video %>" type="video/AVI" />
+        </video>
+      </div>
+
+      <div style="font-size: 1.6em; font-weight: 550; margin: 8% 0 6% 0;">
         <div style=" display: flex; flex-direction: column; align-items: center;">
-          <p style="margin:0; font-size: 1.3em;">Your File is ready to play or download.</p>
-          <button style="min-height: 71px; min-width: 235px; margin-top: 3%;"> <a href="<%= url %>" style="color:black; font-size: 2em;"> Get Your File </a> </button>
-          </div>
+          <p style="margin:0; font-size: 1.3em;">Your file is ready to play or download.</p>
+          <button style="min-height: 71px; min-width: 235px; margin-top: 3%;"> <a href="<%= url %>"
+              style="color:black; font-size: 2em"> Download </a> </button>
         </div>
-        <div>
-        <p id='pleft'>
-            <span style="font-size: 1.6em; font-weight: 550;">Adult Videos/Series</span> <br/>
-          <span>Watch <em>18+ Adult</em> videos and Webseries in HD online. Stream and <em>download</em> HD quality popular and hit <em>vidoes</em> in all <em>Quality</em>.</span>
+      </div>
+      <div class="telegram-channel">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/1024px-Telegram_logo.svg.png"
+          width="50px" height="50px" alt="">
+        <p><a style="margin:0; font-size: 1.3em;" href="https://t.me/my_channels_list_official">My All Channels List</a>
         </p>
-        <p id='pright'>
-            <span style="font-size: 1.6em; font-weight: 550;">Old & New Movies/Series</span> <br/>
-          <span>Watch <em>Bollywood/Hollywood</em> movies and Webseries in HD online. Stream and <em>download</em> HD quality popular and hit <em>movies</em> in <em>Hindi</em>.</span>
-        </p>
-        </div>
       </div>
     </div>
   </div>
+</div>
