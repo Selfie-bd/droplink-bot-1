@@ -118,53 +118,53 @@ bot.command('delete_all', (ctx) => {
     });
 });
 
-bot.on('text', async (ctx) => {
-    console.log('ctx', ctx.message.text);
-    const URL = ctx.message.text;
+// bot.on('text', async (ctx) => {
+//     console.log('ctx', ctx.message.text);
+//     const URL = ctx.message.text;
 
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const shortURL = ctx.message.text.match(urlRegex);
-    console.log('url---', shortURL)
+//     const urlRegex = /(https?:\/\/[^\s]+)/g;
+//     const shortURL = ctx.message.text.match(urlRegex);
+//     console.log('url---', shortURL)
 
-    if (shortURL.length) {
-        // check in db exists or not
-        let isExists = false;
+//     if (shortURL.length) {
+//         // check in db exists or not
+//         let isExists = false;
 
-        const findQuery = `SELECT droplink FROM tg_droplink_data WHERE org_url = \'${URL}\'`
+//         const findQuery = `SELECT droplink FROM tg_droplink_data WHERE org_url = \'${URL}\'`
 
-        client.query(findQuery, async (err, result) => {
-            if (err) {
-                ctx.reply('Something went wrong !!');
-                console.log('errr', err);
-                return;
-            }
-            else {
-                console.log('results', result);
-                if (result.rows.length) isExists = true;
+//         client.query(findQuery, async (err, result) => {
+//             if (err) {
+//                 ctx.reply('Something went wrong !!');
+//                 console.log('errr', err);
+//                 return;
+//             }
+//             else {
+//                 console.log('results', result);
+//                 if (result.rows.length) isExists = true;
 
-                if (isExists) return ctx.reply('Already short link added ==> link');
+//                 if (isExists) return ctx.reply('Already short link added ==> link');
 
-                const uniqID = (new Date()).getTime().toString(36);
-                const linkToShort = `https://droplink-bot.herokuapp.com/${uniqID}`
-                const response = await axios.get(`https://droplink.co/api?api=${process.env.DROPLINK_API_TOKEN}&url=${linkToShort}`);
+//                 const uniqID = (new Date()).getTime().toString(36);
+//                 const linkToShort = `https://droplink-bot.herokuapp.com/${uniqID}`
+//                 const response = await axios.get(`https://droplink.co/api?api=${process.env.DROPLINK_API_TOKEN}&url=${linkToShort}`);
 
-                console.log('response', response)
-                if (response.data.status === 'success') {
-                    const insertQuery = `INSERT INTO tg_droplink_data (droplink, org_url, uniq_id) VALUES (\'${response.data.shortenedUrl}\', \'${URL}\', \'${uniqID}\')`
+//                 console.log('response', response)
+//                 if (response.data.status === 'success') {
+//                     const insertQuery = `INSERT INTO tg_droplink_data (droplink, org_url, uniq_id) VALUES (\'${response.data.shortenedUrl}\', \'${URL}\', \'${uniqID}\')`
 
-                    client.query(insertQuery, (err, result) => {
-                        if (err) {
-                            ctx.reply('Something went wrong !!');
-                            return console.log('errr', err);
-                        }
-                        ctx.reply(response.data.shortenedUrl);
-                        console.log('results', result);
-                    });
-                }
-            }
-        });
-    }
-});
+//                     client.query(insertQuery, (err, result) => {
+//                         if (err) {
+//                             ctx.reply('Something went wrong !!');
+//                             return console.log('errr', err);
+//                         }
+//                         ctx.reply(response.data.shortenedUrl);
+//                         console.log('results', result);
+//                     });
+//                 }
+//             }
+//         });
+//     }
+// });
 
 async function downloadImage(url, path) {
     const writer = fs.createWriteStream(path)
