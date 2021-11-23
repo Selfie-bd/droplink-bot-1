@@ -22,6 +22,8 @@ const client = new Client({
 
 client.connect();
 
+var currentData = {};
+
 const express = require('express');
 const app = express();
 app.set("view engine", "ejs");
@@ -38,6 +40,7 @@ app.get('/:id', async (req, res) => {
     console.log('hello', results);
 
     if (results.length) {
+        currentData.org_url = results[0].org_url;
         res.render(path.join(__dirname + '/index.ejs'), {
             video: results[0].org_url,
             url: `intent://${results[0].org_url}#Intent;package=com.playit.videoplayer;action=android.intent.action.VIEW;scheme=http;type=video/mp4;end`
@@ -192,7 +195,7 @@ bot.command('test', async (ctx) => {
     const localFilePath = "./uploads/Hello.mp4"
     let myScreenshots = [];
     console.log('file-is-going-to-be-saved', localFilePath);
-    await downloadImage('https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4', localFilePath);
+    await downloadImage('https://file-streamer-bot.herokuapp.com/123936', localFilePath);
     console.log('file-is-saved');
     
     if(!fs.existsSync('./uploads/Hello.mp4')) console.log('not-existed');
