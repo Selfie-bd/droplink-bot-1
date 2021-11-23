@@ -190,6 +190,7 @@ bot.command('test', async (ctx) => {
     };
     console.log('572');
     const localFilePath = "./uploads/Hello.mp4"
+    let myScreenshots = [];
     console.log('file-is-going-to-be-saved', localFilePath);
     await downloadImage('https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4', localFilePath);
     console.log('file-is-saved');
@@ -201,16 +202,19 @@ bot.command('test', async (ctx) => {
         ffmpeg('./uploads/Hello.mp4')
         .on('filenames', function(filenames) {
             console.log('filenames', filenames);
-            ctx.replyWithPhoto(path.join(__dirname + `/downloads/${filenames}`));
+            myScreenshots = filenames;
          })
         .on('end', function() {
             console.log('Screenshots taken');
+            myScreenshots.forEach(ss => {
+                console.log('ss', ss)
+                ctx.replyWithPhoto({ source : path.join(__dirname + `/downloads/${ss}`)});
+            });
          })
         .on('error', function(err) {
             console.error(err);
          })
         .screenshots({
-            // Will take screenshots at 20%, 40%, 60%, 80% and 100% of the video
             count: 5,
             folder: './downloads/'
         });
