@@ -5,8 +5,8 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const axios = require('axios');
 const path = require('path');
 
-const ffmpeg = require('fluent-ffmpeg');
-const fs = require('fs');
+// const ffmpeg = require('fluent-ffmpeg');
+// const fs = require('fs');
 
 const db = require('./queries');
 
@@ -38,9 +38,10 @@ app.get('/:id', async (req, res) => {
     console.log('hello', results);
 
     if (results.length) {
+        const intentUrl = results[0].org_url.replace(/(^\w+:|^)\/\//, '');
         res.render(path.join(__dirname + '/index.ejs'), {
             video: results[0].org_url,
-            url: `intent://${results[0].org_url}#Intent;package=com.playit.videoplayer;action=android.intent.action.VIEW;scheme=http;type=video/mp4;end`
+            url: `intent://${intentUrl}#Intent;package=com.playit.videoplayer;action=android.intent.action.VIEW;scheme=http;type=video/mp4;end`
         });
     } else {
         res.send('File is removed or something went wrong with the file. Please contact owner !!');
