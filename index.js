@@ -12,12 +12,11 @@ const db = require('./queries');
 
 const { Client } = require('pg');
 const client = new Client({
-    host: process.env.DBHOST,
-    user: process.env.DBUSER,
-    password: process.env.DBPASSWORD,
+    host: process.env.HOST,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
     database: process.env.DATABASE,
-    port: process.env.DBPORT,
-    ssl: { rejectUnauthorized: false }
+    port: process.env.DBPORT
 });
 
 client.connect();
