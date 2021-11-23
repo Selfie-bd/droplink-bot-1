@@ -22,8 +22,6 @@ const client = new Client({
 
 client.connect();
 
-var currentData = {};
-
 const express = require('express');
 const app = express();
 app.set("view engine", "ejs");
@@ -40,7 +38,6 @@ app.get('/:id', async (req, res) => {
     console.log('hello', results);
 
     if (results.length) {
-        currentData.org_url = results[0].org_url;
         res.render(path.join(__dirname + '/index.ejs'), {
             video: results[0].org_url,
             url: `intent://${results[0].org_url}#Intent;package=com.playit.videoplayer;action=android.intent.action.VIEW;scheme=http;type=video/mp4;end`
@@ -96,18 +93,6 @@ bot.command('check', (ctx) => {
         }
     });
 });
-
-// bot.command('delete', (ctx) => {
-//     client.query(`DELETE FROM tg_droplink_data WHERE id = 1`, (err, result) => {
-//         if (err) {
-//             ctx.reply('Something went wrong !!');
-//             console.log('errr', err);
-//         }
-//         else {
-//             console.log('results', result);
-//         }
-//     });
-// });
 
 bot.command('delete_all', (ctx) => {
     client.query(`DELETE FROM tg_droplink_data WHERE id = 1`, (err, result) => {
@@ -168,64 +153,5 @@ bot.command('delete_all', (ctx) => {
 //         });
 //     }
 // });
-
-async function downloadImage(url, path) {
-    const writer = fs.createWriteStream(path)
-
-    const response = await axios({
-        url,
-        method: 'GET',
-        responseType: 'stream'
-    })
-
-    response.data.pipe(writer)
-
-    return new Promise((resolve, reject) => {
-        writer.on('finish', resolve)
-        writer.on('error', reject)
-    })
-};
-
-bot.command('test', async (ctx) => {
-    console.log('test-command-568');
-    if(!fs.existsSync('uploads')) {
-        fs.mkdirSync('uploads');
-    };
-    console.log('572');
-    const localFilePath = "./uploads/Hello.mp4"
-    let myScreenshots = [];
-    console.log('file-is-going-to-be-saved', localFilePath);
-    await downloadImage('https://file-streamer-bot.herokuapp.com/123936', localFilePath);
-    console.log('file-is-saved');
-    
-    if(!fs.existsSync('./uploads/Hello.mp4')) console.log('not-existed');
-    
-    try {
-        console.log('gone-in-try');
-        ffmpeg('./uploads/Hello.mp4')
-        .on('filenames', function(filenames) {
-            console.log('filenames', filenames);
-            myScreenshots = filenames;
-         })
-        .on('end', function() {
-            console.log('Screenshots taken');
-            myScreenshots.forEach(ss => {
-                console.log('ss', ss);
-                console.log('length', myScreenshots.length)
-                ctx.replyWithPhoto({ source : path.join(__dirname + `/downloads/${ss}`)});
-            });
-         })
-        .on('error', function(err) {
-            console.error(err);
-         })
-        .screenshots({
-            count: 5,
-            folder: './downloads/'
-        });
-    }
-    catch (error){
-        console.log('try-catch-error',error)
-    }  
-});
 
 bot.launch();
