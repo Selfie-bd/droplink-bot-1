@@ -5,6 +5,9 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const axios = require('axios');
 const path = require('path');
 
+const ffmpeg = require('fluent-ffmpeg');
+const fs = require('fs');
+
 const db = require('./public/js/queries');
 const func = require('./public/js/functions');
 
@@ -256,6 +259,73 @@ bot.command('short_to_droplink', async (ctx) => {
     } else {
         ctx.reply('Please send a valid link to be shorten !!!')
     }
+});
+
+/*
+
+FFMPEG
+
+*/
+
+async function downloadImage(url, path) {
+    const writer = fs.createWriteStream(path)
+
+    const response = await axios({
+        url,
+        method: 'GET',
+        responseType: 'stream'
+    })
+
+    response.data.pipe(writer)
+
+    return new Promise((resolve, reject) => {
+        writer.on('finish', resolve)
+        writer.on('error', reject)
+    })
+};
+
+bot.command('ffmpeg', async (ctx) => {
+    if(!fs.existsSync('uploads')) {
+        fs.mkdirSync('uploads');
+    };
+    const localFilePath = "./uploads/Hello.mp4"
+    let myScreenshots = [];
+    console.log('file-is-going-to-be-saved', localFilePath);
+    await downloadImage('https://file-streamer-bot.herokuapp.com/123936', localFilePath);
+    console.log('file-is-saved');
+
+    if(!fs.existsSync('./uploads/Hello.mp4')) console.log('not-existed');
+
+    try {
+        console.log('gone-in-try');
+        ffmpeg('./uploads/Hello.mp4')
+        .on('filenames', function(filenames) {
+            console.log('filenames', filenames);
+            myScreenshots = filenames;
+         })
+        .on('end', function() {
+            console.log('Screenshots taken');
+            ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+            const media = myScreenshots.map(ss => {
+                return {
+                    type: 'photo',
+                    media: { source : path.join(__dirname + `/downloads/${ss}`)},
+                    caption: ss
+                }
+            });
+            await ctx.telegram.sendMediaGroup(ctx.chat.id, media);
+         })
+        .on('error', function(err) {
+            console.error(err);
+         })
+        .screenshots({
+            count: process.env.SCREENSHOTS_COUNT,
+            folder: './downloads/'
+        });
+    }
+    catch (error){
+        console.log('try-catch-error',error)
+    }  
 });
 
 bot.launch();
