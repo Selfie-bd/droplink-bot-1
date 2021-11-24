@@ -7,6 +7,7 @@ const path = require('path');
 
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
+// const ProgressBar = require('progress');
 
 const db = require('./public/js/queries');
 const func = require('./public/js/functions');
@@ -286,11 +287,15 @@ async function downloadImage(url, path, ctx) {
         responseType: 'stream'
     });
     
-    console.log('GET---response====', response.data)
+//     console.log('GET---response====', response.data)
 
     response.data.pipe(writer);
     
-    writer.on('data', function(chunk) {
+    response.data.on('response', (data) => {
+        total_bytes = parseInit(data.headers['content-lenght']);
+    });
+
+    response.data.on('data', function(chunk) {
         // Update the received bytes
         received_bytes += chunk.length;
 
