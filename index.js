@@ -9,18 +9,16 @@ const db = require('./queries');
 
 const { Client } = require('pg');
 const client = new Client({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
-    port: process.env.DBPORT,
-    ssl: { rejectUnauthorized: false }
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false,
+    }
 });
-
 client.connect();
 
 const express = require('express');
 const app = express();
+
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -29,15 +27,14 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/:id', async (req, res) => {
-    if (req.params.id === 'favicon.ico') return;
-    console.log('req===', req);
+    if ((req.params.id).includes('.')) return;
+    
     const results = await db.getDataByUniqId(req, res);
-    console.log('hello', results);
 
-    if (results.length) {
-        const intentUrl = results[0].org_url.replace(/(^\w+:|^)\/\//, '');
+    if (results.total > 0) {
+        const intentUrl = results.data[0].org_url.replace(/(^\w+:|^)\/\//, '');
         res.render(path.join(__dirname + '/index.ejs'), {
-            video: results[0].org_url,
+            video: results.data[0].org_url,
             url: `intent://${intentUrl}#Intent;package=com.playit.videoplayer;action=android.intent.action.VIEW;scheme=http;type=video/mp4;end`
         });
     } else {
@@ -57,6 +54,26 @@ bot.catch((err, ctx) => {
     if (!mainError) return;
     ctx.reply(mainError);
 });
+
+/*
+
+Functions
+
+*/
+
+function DBReply (ctx, results) {
+    if (results.error) {
+        return ctx.reply(results.error.msg);
+    }
+    if (results.total > 0) {
+        const res = results.data[0];
+        ctx.reply(`*Showing results from DB*\n\n*ID :* \`${res.id}\`\n\n*Uniq ID :* \`${res.uniq_id}\`\n\n*Original URL :* \`${res.org_url}\`\n\n*Droplink :* \`${res.droplink}\``, {
+            parse_mode: 'markdown'
+        });
+    } else {
+        ctx.reply('No results found !!');
+    }
+};
 
 /*
 
@@ -80,76 +97,131 @@ bot.start((ctx) => {
     });
 });
 
-bot.command('check', (ctx) => {
-    client.query(`SELECT * FROM tg_droplink_data`, (err, result) => {
-        if (err) {
-            ctx.reply('Something went wrong !!');
-            console.log('errr', err);
-        }
-        else {
-            console.log('results', result);
-        }
-    });
+// Admin only command
+
+bot.command('create', async (ctx) => {
+    const res = await client.query('CREATE TABLE tg_droplink_data (id SERIAL PRIMARY KEY, droplink VARCHAR, org_url VARCHAR, uniq_id VARCHAR)');
+    console.log('res', res)
 });
 
-bot.command('delete_all', (ctx) => {
-    client.query(`DELETE FROM tg_droplink_data WHERE id = 1`, (err, result) => {
-        if (err) {
-            ctx.reply('Something went wrong !!');
-            console.log('errr', err);
-        }
-        else {
-            console.log('results', result);
-        }
-    });
+bot.command('delete', async (ctx) => {
+    const res = await client.query('DROP TABLE IF EXISTS tg_droplink_data');
+    console.log('res', res)
 });
+
+bot.command('get_by_id', async (ctx) => {
+    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    const id = ctx.message.text.split('/get_by_id ')[1];
+
+    const results = await db.getDataById( { params: { id: `${Number(id)}` } } );
+    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+    return DBReply(ctx, results);
+});
+
+bot.command('get_by_url', async (ctx) => {
+    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    const url = ctx.message.text.split('/get_by_url ')[1];
+
+    const results = await db.getDataByOrgUrl( { params: { url: `${url}` } } );
+    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+    return DBReply(ctx, results);
+});
+
+bot.command('get_by_droplink', async (ctx) => {
+    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    const droplink = ctx.message.text.split('/get_by_droplink ')[1];
+
+    const results = await db.getDataByDroplink( { params: { droplink: `${droplink}` } } );
+    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+    return DBReply(ctx, results);
+});
+
+bot.command('get_by_uniqid', async (ctx) => {
+    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    const uniqId = ctx.message.text.split('/get_by_uniqid ')[1];
+
+    const results = await db.getDataByUniqId( { params: { id: `${uniqId}` } } );
+    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+    return DBReply(ctx, results);
+});
+
+bot.command('delete_data', async (ctx) => {
+    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    const id = ctx.message.text.split('/delete_data ')[1];
+    
+    const results = await db.deleteData( { params: { id: `${Number(id)}` } } );
+    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+    
+    if (results.error) {
+        return ctx.reply(results.error.msg);
+    }
+    ctx.reply('Successfully deleted !!');
+});
+
+bot.command('delete_data', async (ctx) => {
+    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    const id = ctx.message.text.split('/delete_data ')[1];
+    
+    const results = await db.deleteData( { params: { id: `${Number(id)}` } } );
+    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+    
+    if (results.error) {
+        return ctx.reply(results.error.msg);
+    }
+    ctx.reply('Successfully deleted !!');
+});
+
+bot.command('check', async (ctx) => {
+    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    
+    const results = await db.getData();
+    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+    
+    if (results.error) {
+        return ctx.reply(results.error.msg);
+    }
+    if (results.total > 0) {
+        console.log('results', results.data)
+    } else {
+        ctx.reply('No results found !!');
+    }
+});
+
+// user commands
 
 bot.on('text', async (ctx) => {
-    console.log('ctx', ctx.message.text);
-    if ((ctx.message.text).includes('note')) return ctx.reply('note excepted');
+    if ((ctx.message.text).includes('note')) return ctx.reply('note accepted');
     const URL = ctx.message.text;
-
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const shortURL = ctx.message.text.match(urlRegex);
-    console.log('url---', shortURL)
 
-    if (shortURL.length) {
+    if (shortURL !== null && shortURL.length) {
         // check in db exists or not
-        let isExists = false;
+        const results = await db.getDataByOrgUrl({ params: { url: `${URL}` } });
+        if (results.error) {
+            return ctx.reply(results.error.msg);
+        }
+        if (results.total > 0) return ctx.reply('Link is already available in database.');
 
-        const findQuery = `SELECT droplink FROM tg_droplink_data WHERE org_url = \'${URL}\'`
+        const uniqID = (new Date()).getTime().toString(36);
+        const linkToShort = `https://droplink-bot.herokuapp.com/${uniqID}`;
 
-        client.query(findQuery, async (err, result) => {
-            if (err) {
-                ctx.reply('Something went wrong !!');
-                console.log('errr', err);
-                return;
-            }
-            else {
-                console.log('results', result);
-                if (result.rows.length) isExists = true;
-
-                if (isExists) return ctx.reply('Already short link added ==> link');
-
-                const uniqID = (new Date()).getTime().toString(36);
-                const linkToShort = `https://droplink-bot.herokuapp.com/${uniqID}`
-                const response = await axios.get(`https://droplink.co/api?api=${process.env.DROPLINK_API_TOKEN}&url=${linkToShort}`);
-
-                console.log('response', response)
-                if (response.data.status === 'success') {
-                    const insertQuery = `INSERT INTO tg_droplink_data (droplink, org_url, uniq_id) VALUES (\'${response.data.shortenedUrl}\', \'${URL}\', \'${uniqID}\')`
-
-                    client.query(insertQuery, (err, result) => {
-                        if (err) {
-                            ctx.reply('Something went wrong !!');
-                            return console.log('errr', err);
-                        }
-                        ctx.reply(response.data.shortenedUrl);
-                        console.log('results', result);
-                    });
-                }
-            }
-        });
+        const response = await axios.get(`https://droplink.co/api?api=${process.env.DROPLINK_API_TOKEN}&url=${linkToShort}`);
+        if (response.data.status === 'success') {
+            db.createData({ body: [response.data.shortenedUrl, URL, uniqID] })
+                .then((res) => {
+                    if (res.err) {
+                        ctx.reply('Something went wrong !!');
+                        return console.log('errr', err);
+                    }
+                    ctx.reply(response.data.shortenedUrl);
+                })
+                .catch(err => {
+                    ctx.reply(err)
+                });
+        }
+    } else {
+        ctx.reply('Please send a valid link to be shorten !!!')
     }
 });
 
