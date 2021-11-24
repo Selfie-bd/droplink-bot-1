@@ -267,16 +267,38 @@ FFMPEG
 
 */
 
-async function downloadImage(url, path) {
-    const writer = fs.createWriteStream(path)
+function showProgress(received,total){
+    let percentage = (received * 100) / total;
+    console.log(percentage + "% | " + func.formatBytes(received) + " MB out of " + func.formatBytes(total) + " MB.");
+    // 50% | 50000 bytes received out of 100000 bytes.
+    return percentage + "% | " + func.formatBytes(received) + " MB out of " + func.formatBytes(total) + " MB."
+}
+
+async function downloadImage(url, path, ctx) {
+    let received_bytes = 0;
+    let total_bytes = 0;
+    
+    const writer = fs.createWriteStream(path);
 
     const response = await axios({
         url,
         method: 'GET',
         responseType: 'stream'
-    })
+    });
 
-    response.data.pipe(writer)
+    response.data.pipe(writer);
+    
+    response.on('data', function(chunk) {
+        // Update the received bytes
+        received_bytes += chunk.length;
+
+        const progress = showProgress(received_bytes, total_bytes);
+        console.log('showProgress====', progress)
+
+        ctx.editMessageText(progress, {
+            parse_mode: 'markdown'
+        });
+    });
 
     return new Promise((resolve, reject) => {
         writer.on('finish', resolve)
@@ -296,7 +318,7 @@ bot.command('ffmpeg', async (ctx) => {
     const localFilePath = "./uploads/Hello.mp4"
     let myScreenshots = [];
     console.log('file-is-going-to-be-saved', localFilePath);
-    await downloadImage(shortURL[0], localFilePath);
+    await downloadImage(shortURL[0], localFilePath, ctx);
     console.log('file-is-saved');
 
     if(!fs.existsSync('./uploads/Hello.mp4')) console.log('not-existed');
