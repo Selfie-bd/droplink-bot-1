@@ -285,13 +285,18 @@ async function downloadImage(url, path) {
 };
 
 bot.command('ffmpeg', async (ctx) => {
+    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
+    const URL = ctx.message.text.split(' ')[1];
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const shortURL = URL.match(urlRegex);
+
     if(!fs.existsSync('uploads')) {
         fs.mkdirSync('uploads');
     };
     const localFilePath = "./uploads/Hello.mp4"
     let myScreenshots = [];
     console.log('file-is-going-to-be-saved', localFilePath);
-    await downloadImage('https://file-streamer-bot.herokuapp.com/123936', localFilePath);
+    await downloadImage(shortURL[0], localFilePath);
     console.log('file-is-saved');
 
     if(!fs.existsSync('./uploads/Hello.mp4')) console.log('not-existed');
