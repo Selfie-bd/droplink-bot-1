@@ -36,6 +36,9 @@ app.get('/:id', async (req, res) => {
         const intentUrl = results.data[0].org_url.replace(/(^\w+:|^)\/\//, '');
         res.render(path.join(__dirname + '/index.ejs'), {
             video: results.data[0].org_url,
+            video_name: results.data[0].video_name,
+            video_size: results.data[0].video_size,
+            video_duration: results.data[0].video_duration,
             url: `intent://${intentUrl}#Intent;package=com.playit.videoplayer;action=android.intent.action.VIEW;scheme=http;type=video/mp4;end`
         });
     } else {
