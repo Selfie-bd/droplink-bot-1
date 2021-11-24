@@ -60,26 +60,6 @@ bot.catch((err, ctx) => {
 
 /*
 
-Functions
-
-*/
-
-function DBReply (ctx, results) {
-    if (results.error) {
-        return ctx.reply(results.error.msg);
-    }
-    if (results.total > 0) {
-        const res = results.data[0];
-        ctx.reply(`*Showing results from DB*\n\n*ID :* \`${res.id}\`\n\n*Uniq ID :* \`${res.uniq_id}\`\n\n*Original URL :* \`${res.org_url}\`\n\n*Droplink :* \`${res.droplink}\``, {
-            parse_mode: 'markdown'
-        });
-    } else {
-        ctx.reply('No results found !!');
-    }
-};
-
-/*
-
 Bot
 
 */
@@ -121,69 +101,78 @@ bot.command('get_by_id', async (ctx) => {
     return DBReply(ctx, results);
 });
 
+bot.command('get_by_id', async (ctx) => {
+    const isAllowed = func.isAdmin(ctx);;
+    if (!isAllowed.success) return ctx.reply(isAllowed.error);
+
+    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08sdhnjZwT5fAfZJCkdVlH6NMIgLf-gACagQAAq_pGVaiHwGxKU30MCIE');
+    const id = ctx.message.text.split('/get_by_id ')[1];
+
+    const results = await db.getDataById({ params: { id: `${Number(id)}` } });
+    ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+    return func.sendReply(ctx, results);
+});
+
 bot.command('get_by_url', async (ctx) => {
-    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    const isAllowed = func.isAdmin(ctx);;
+    if (!isAllowed.success) return ctx.reply(isAllowed.error);
+
+    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08sdhnjZwT5fAfZJCkdVlH6NMIgLf-gACagQAAq_pGVaiHwGxKU30MCIE');
     const url = ctx.message.text.split('/get_by_url ')[1];
 
-    const results = await db.getDataByOrgUrl( { params: { url: `${url}` } } );
-    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
-    return DBReply(ctx, results);
+    const results = await db.getDataByOrgUrl({ params: { url: `${url}` } });
+    ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+    return func.sendReply(ctx, results);
 });
 
 bot.command('get_by_droplink', async (ctx) => {
-    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    const isAllowed = func.isAdmin(ctx);;
+    if (!isAllowed.success) return ctx.reply(isAllowed.error);
+
+    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08sdhnjZwT5fAfZJCkdVlH6NMIgLf-gACagQAAq_pGVaiHwGxKU30MCIE');
     const droplink = ctx.message.text.split('/get_by_droplink ')[1];
 
-    const results = await db.getDataByDroplink( { params: { droplink: `${droplink}` } } );
-    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
-    return DBReply(ctx, results);
+    const results = await db.getDataByDroplink({ params: { droplink: `${droplink}` } });
+    ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+    return func.sendReply(ctx, results);
 });
 
 bot.command('get_by_uniqid', async (ctx) => {
-    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    const isAllowed = func.isAdmin(ctx);;
+    if (!isAllowed.success) return ctx.reply(isAllowed.error);
+
+    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08sdhnjZwT5fAfZJCkdVlH6NMIgLf-gACagQAAq_pGVaiHwGxKU30MCIE');
     const uniqId = ctx.message.text.split('/get_by_uniqid ')[1];
 
-    const results = await db.getDataByUniqId( { params: { id: `${uniqId}` } } );
-    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
-    return DBReply(ctx, results);
+    const results = await db.getDataByUniqId({ params: { id: `${uniqId}` } });
+    ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+    return func.sendReply(ctx, results);
 });
 
 bot.command('delete_data', async (ctx) => {
-    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
     const id = ctx.message.text.split('/delete_data ')[1];
-    
-    const results = await db.deleteData( { params: { id: `${Number(id)}` } } );
-    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
-    
+
+    const results = await db.deleteData({ params: { id: `${Number(id)}` } });
+    ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+
     if (results.error) {
         return ctx.reply(results.error.msg);
     }
     ctx.reply('Successfully deleted !!');
 });
 
-bot.command('delete_data', async (ctx) => {
-    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
-    const id = ctx.message.text.split('/delete_data ')[1];
-    
-    const results = await db.deleteData( { params: { id: `${Number(id)}` } } );
-    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
-    
-    if (results.error) {
-        return ctx.reply(results.error.msg);
-    }
-    ctx.reply('Successfully deleted !!');
-});
+bot.command('get_all_data', async (ctx) => {
+    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08sdhnjZwT5fAfZJCkdVlH6NMIgLf-gACagQAAq_pGVaiHwGxKU30MCIE');
 
-bot.command('check', async (ctx) => {
-    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
-    
     const results = await db.getData();
-    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
-    
+    ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+
     if (results.error) {
         return ctx.reply(results.error.msg);
     }
     if (results.total > 0) {
+        ctx.reply('you got your results in response !!!');
         console.log('results', results.data)
     } else {
         ctx.reply('No results found !!');
