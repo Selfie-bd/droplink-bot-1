@@ -195,8 +195,6 @@ bot.command('add_screenshot_link', (ctx) => {
     const screenshotLink = ctx.message.text.split(' ')[1];
     if (!screenshotLink) return;
 
-    console.log('capt', ctx.message.reply_to_message.caption)
-
     const repliedCaption = ctx.message.reply_to_message.caption
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const allURLs = repliedCaption.match(urlRegex);
@@ -217,8 +215,7 @@ bot.command('add_screenshot_link', (ctx) => {
     );
 });
 
-bot.command('droplink', async (ctx) => {
-    console.log('ctx==', ctx.message);
+bot.command('short_to_droplink', async (ctx) => {
     const video_name = ctx.message.reply_to_message.video.file_name || 'Telegram : @my_channels_list_official';
     const video_size = ctx.message.reply_to_message.video.file_size || 0;
     const video_duration = ctx.message.reply_to_message.video.duration || 0;
