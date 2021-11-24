@@ -198,6 +198,8 @@ bot.command('add_screenshot_link', (ctx) => {
 });
 
 bot.command('short_to_droplink', async (ctx) => {
+    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
+    
     const video_name = ctx.message.reply_to_message.video.file_name || 'Telegram : @my_channels_list_official';
     const video_size = ctx.message.reply_to_message.video.file_size || 0;
     const video_duration = ctx.message.reply_to_message.video.duration || 0;
@@ -239,6 +241,7 @@ bot.command('short_to_droplink', async (ctx) => {
 
                     const msg = 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4';
 
+                    ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
                     ctx.telegram.sendAnimation(ctx.chat.id, msg,
                         {
                             caption: final_caption,
