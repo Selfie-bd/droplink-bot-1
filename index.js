@@ -298,7 +298,6 @@ async function downloadImage(url, path, ctx) {
         received_bytes += chunk.length;
 
         const progress = showProgress(received_bytes, total_bytes);
-        console.log('showProgress====', progress)
 
         ctx.telegram.editMessageText(ctx.chat.id, ctx.message.message_id + 1, '', progress);
     });
