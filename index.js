@@ -270,9 +270,8 @@ FFMPEG
 
 function showProgress(received,total){
     let percentage = (received * 100) / total;
-    console.log(percentage + "% | " + func.formatBytes(received) + " MB out of " + func.formatBytes(total) + " MB.");
     // 50% | 50000 bytes received out of 100000 bytes.
-    return percentage + "% | " + func.formatBytes(received) + " MB out of " + func.formatBytes(total) + " MB."
+    return percentage + "% | " + func.formatBytes(received) + " out of " + func.formatBytes(total) + " ."
 }
 
 async function downloadImage(url, path, ctx) {
