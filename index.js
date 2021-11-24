@@ -29,8 +29,11 @@ app.get('/', async (req, res) => {
 });
 
 app.get('/:id', async (req, res) => {
+    console.log('req.originalUrl======', req.originalUrl)
+    console.log('req.hostname=======', req.hostname)
+    console.log('req.url=====', req.url)
     console.log('req==========/id=======', req);
-    console.log('res==========/id=======', res);
+//     console.log('res==========/id=======', res);
     if ((req.params.id).includes('.')) return;
     
     const results = await db.getDataByUniqId(req, res);
