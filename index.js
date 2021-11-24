@@ -6,6 +6,7 @@ const axios = require('axios');
 const path = require('path');
 
 const db = require('./queries');
+const func = require('./functions');
 
 const { Client } = require('pg');
 const client = new Client({
