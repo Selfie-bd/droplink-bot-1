@@ -288,7 +288,7 @@ async function downloadImage(url, path, ctx) {
 
     response.data.pipe(writer);
     
-    total_bytes = parseInt(res.headers['content-length']);
+    total_bytes = parseInt(response.headers['content-length']);
     console.log('total--',total_bytes)
     
 //     response.data.on('response', (data) => {
