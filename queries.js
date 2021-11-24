@@ -2,95 +2,109 @@ const Pool = require('pg').Pool;
 require('dotenv').config();
 
 const pool = new Pool({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
-    port: process.env.DBPORT,
-    ssl: { rejectUnauthorized: false }
-})
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false,
+    }
+});
 
-const getUsers = (request, response) => {
-    // console.log('getusers-reques', request);
-    // console.log('getuser-res', response)
-    pool.query('SELECT * FROM tg_droplink_data ORDER BY id ASC', (error, results) => {
-        if (error) {
-            throw error
-        }
-        console.log('getuser-result', results)
-        return response.status(200).json(results.rows)
-    })
-}
+const getData = async () => {
+    try {
+        response = await pool.query('SELECT * FROM tg_droplink_data ORDER BY id ASC');
+        return { data: response.rows, total: response.rows.length };
+    } catch (error) {
+        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+    };
+};
 
-const getUserById = (request, response) => {
-    console.log('getusers-reques', request.params);
-    // console.log('getuser-res', response)
-    const id = parseInt(request.params.id)
+const getDataById = async (request) => {
+    const id = parseInt(request.params.id);
 
-    pool.query('SELECT * FROM tg_droplink_data WHERE id = $1', [id], (error, results) => {
-        if (error) {
-            throw error
-        }
-        console.log('getuser-result', results)
-        return response.status(200).json(results.rows)
-    })
-}
+    try {
+        response = await pool.query('SELECT * FROM tg_droplink_data WHERE id = $1', [id]);
+        return { data: response.rows, total: response.rows.length };
+    } catch (error) {
+        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+    };
+};
 
-const getDataByUniqId = async (request, response) => {
+const getDataByUniqId = async (request) => {
     console.log('request.params', request.params)
     const uniq_id = request.params.id
 
     try {
         response = await pool.query('SELECT * FROM tg_droplink_data WHERE uniq_id = $1', [uniq_id]);
-        return response.rows;
+        return { data: response.rows, total: response.rows.length };
     } catch (error) {
-        throw error;
-    }
-}
+        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+    };
+};
 
-const createUser = (request, response) => {
-    const { droplink, org_url, uniq_id } = request.body
+const getDataByOrgUrl = async (request) => {
+    console.log('request.params', request.params)
+    const url = request.params.url
 
-    pool.query('INSERT INTO tg_droplink_data (droplink, org_url, uniq_id) VALUES ($1, $2, $3)', [droplink, org_url, uniq_id], (error, results) => {
-        if (error) {
-            throw error
-        }
-        response.status(201).send(`User added with ID: ${result.insertId}`)
-    })
-}
+    try {
+        response = await pool.query('SELECT * FROM tg_droplink_data WHERE org_url = $1', [url]);
+        return { data: response.rows, total: response.rows.length };
+    } catch (error) {
+        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+    };
+};
 
-const updateUser = (request, response) => {
-    const id = parseInt(request.params.id)
-    const { name, email } = request.body
+const getDataByDroplink = async (request) => {
+    console.log('request.params', request.params)
+    const droplink = request.params.droplink
 
-    pool.query(
-        'UPDATE tg_droplink_data SET name = $1, email = $2 WHERE id = $3',
-        [name, email, id],
-        (error, results) => {
-            if (error) {
-                throw error
-            }
-            response.status(200).send(`User modified with ID: ${id}`)
-        }
-    )
-}
+    try {
+        response = await pool.query('SELECT * FROM tg_droplink_data WHERE droplink = $1', [droplink]);
+        return { data: response.rows, total: response.rows.length };
+    } catch (error) {
+        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+    };
+};
 
-const deleteUser = (request, response) => {
-    const id = parseInt(request.params.id)
+const createData = async (request) => {
+    const [ droplink, org_url, uniq_id ] = request.body;
 
-    pool.query('DELETE FROM tg_droplink_data WHERE id = $1', [id], (error, results) => {
-        if (error) {
-            throw error
-        }
-        response.status(200).send(`User deleted with ID: ${id}`)
-    })
-}
+    try {
+        response = await pool.query('INSERT INTO tg_droplink_data (droplink, org_url, uniq_id) VALUES ($1, $2, $3)', [droplink, org_url, uniq_id]);
+        return { data: response };
+    } catch (error) {
+        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+    };
+};
+
+const updateData = async (request) => {
+    const id = parseInt(request.params.id);
+    const [ droplink, org_url, uniq_id ] = request.body;
+
+    try {
+        response = await pool.query('UPDATE tg_droplink_data SET droplink = $1, org_url = $2, uniq_id = $3 WHERE id = $4', [droplink, org_url, uniq_id, id]);
+        return { data: response };
+    } catch (error) {
+        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+    };
+};
+
+const deleteData = async (request) => {
+    const id = parseInt(request.params.id);
+
+    try {
+        response = await pool.query('DELETE FROM tg_droplink_data WHERE id = $1', [id]);
+        return { data: response };
+    } catch (error) {
+        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+    };
+};
 
 module.exports = {
-    getUsers,
-    getUserById,
+    getData,
+    getDataById,
     getDataByUniqId,
-    createUser,
-    updateUser,
-    deleteUser,
-}
+    getDataByOrgUrl,
+    getDataByDroplink,
+    createData,
+    updateData,
+    deleteData,
+};
