@@ -268,18 +268,17 @@ FFMPEG
 
 */
 
-function showProgress(received,total){
+function showProgress(received, total){
     let percentage = (received * 100) / total;
-    // 50% | 50000 bytes received out of 100000 bytes.
-    return percentage + "% | " + func.formatBytes(received) + " out of " + func.formatBytes(total) + " ."
-}
+    return Number(percentage).toFixed(2) + "% | " + func.formatBytes(received) + " out of " + func.formatBytes(total) + " ."
+};
 
 async function downloadImage(url, path, ctx) {
     let received_bytes = 0;
     let total_bytes = 0;
     
     const writer = fs.createWriteStream(path);
-
+    
     const response = await axios({
         url,
         method: 'GET',
@@ -287,15 +286,8 @@ async function downloadImage(url, path, ctx) {
     });
 
     response.data.pipe(writer);
-    
     total_bytes = parseInt(response.headers['content-length']);
-    console.log('total--',total_bytes)
     
-//     response.data.on('response', (data) => {
-//         console.log('hello----------',data.headers['content-length'])
-//         total_bytes = parseInit(data.headers['content-length']);
-//     });
-
     response.data.on('data', function(chunk) {
         // Update the received bytes
         received_bytes += chunk.length;
