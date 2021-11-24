@@ -23,17 +23,23 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/', async (req, res) => {
-    console.log('req==========/=======', req);
-    console.log('res==========/=======', res);
     res.send('Welcome !!');
 });
 
 app.get('/:id', async (req, res) => {
-    console.log('req.originalUrl======', req.originalUrl)
-    console.log('req.hostname=======', req.hostname)
-    console.log('req.url=====', req.url)
-    console.log('req==========/id=======', req);
-//     console.log('res==========/id=======', res);
+    const currentUrl = `${req.protocol}://${req.hostname}/${req.params.id}`;
+    console.log('currebturl', currentUrl)
+
+    let redirectHostName = 'droplink-bot-v2';
+    if (req.hostname.includes('v2')) {
+        redirectHostName = 'droplink-bot'
+    }
+    
+    const status = await checkUrl (currentUrl);
+    if (!status) {
+        return res.redirect(`https://${redirectHostName}.herokuapp.com`);
+    }
+    
     if ((req.params.id).includes('.')) return;
     
     const results = await db.getDataByUniqId(req, res);
@@ -79,6 +85,17 @@ function DBReply (ctx, results) {
         });
     } else {
         ctx.reply('No results found !!');
+    }
+};
+
+async function checkUrl(url) {
+    try {
+        await axios.head(url);
+        return true;
+    } catch (error) {
+        if (error && error.response && error.response.status >= 400) {
+            return false;
+        } else return false;
     }
 };
 
