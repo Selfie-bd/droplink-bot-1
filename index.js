@@ -308,7 +308,7 @@ bot.command('ffmpeg', async (ctx) => {
             console.log('filenames', filenames);
             myScreenshots = filenames;
          })
-        .on('end', function() {
+        .on('end', async function() {
             console.log('Screenshots taken');
             ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
             const media = myScreenshots.map(ss => {
