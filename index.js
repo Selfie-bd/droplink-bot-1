@@ -286,7 +286,7 @@ async function downloadImage(url, path, ctx) {
         responseType: 'stream'
     });
     
-    console.log('GET---response====', response)
+    console.log('GET---response====', response.data)
 
     response.data.pipe(writer);
     
