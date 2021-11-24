@@ -302,9 +302,9 @@ async function downloadImage(url, path, ctx) {
         const progress = showProgress(received_bytes, total_bytes);
         console.log('showProgress====', progress)
 
-        ctx.editMessageText(progress, {
-            parse_mode: 'markdown'
-        });
+//         ctx.editMessageText(progress, {
+//             parse_mode: 'markdown'
+//         });
     });
 
     return new Promise((resolve, reject) => {
