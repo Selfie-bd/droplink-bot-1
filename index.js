@@ -93,15 +93,6 @@ bot.command('delete', async (ctx) => {
 });
 
 bot.command('get_by_id', async (ctx) => {
-    // await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
-    const id = ctx.message.text.split('/get_by_id ')[1];
-
-    const results = await db.getDataById( { params: { id: `${Number(id)}` } } );
-    // ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
-    return DBReply(ctx, results);
-});
-
-bot.command('get_by_id', async (ctx) => {
     const isAllowed = func.isAdmin(ctx);;
     if (!isAllowed.success) return ctx.reply(isAllowed.error);
 
