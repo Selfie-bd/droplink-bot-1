@@ -285,10 +285,12 @@ async function downloadImage(url, path, ctx) {
         method: 'GET',
         responseType: 'stream'
     });
+    
+    console.log('GET---response====', response)
 
     response.data.pipe(writer);
     
-    response.on('data', function(chunk) {
+    writer.on('data', function(chunk) {
         // Update the received bytes
         received_bytes += chunk.length;
 
