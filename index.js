@@ -189,9 +189,42 @@ bot.command('check', async (ctx) => {
 
 // user commands
 
-bot.on('text', async (ctx) => {
+bot.command('add_screenshot_link', (ctx) => {
+    const fileUrl = 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4';
+    const screenshotLink = ctx.message.text.split(' ')[1];
+    if (!screenshotLink) return;
+
+    console.log('capt', ctx.message.reply_to_message.caption)
+
+    const repliedCaption = ctx.message.reply_to_message.caption
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const allURLs = repliedCaption.match(urlRegex);
+
+    const notAvailable = "not\\_available";
+
+    const DEF_CAPTION = '🔰  *HOW TO DOWNLOAD* :\n\n➤  _Watch Video :_ [Download Trick](https://t.me/my_channels_list_official)\n➤  _Just Install PLAYit App from PlayStore_\n➤  🚀 _High Speed Download & No Buffering_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📥 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐋𝐢𝐧𝐤𝐬/👀𝐖𝐚𝐭𝐜𝐡 𝐎𝐧𝐥𝐢𝐧𝐞\n\n\n';
+    const URL_CAPTION = `🔞️ *Screenshots/Preview/Trailer*\n ➪ ${screenshotLink}\n\n🎬 *Video Link*\n ➪ ${allURLs[0] || notAvailable}\n\n\n`;
+    let BACKUP_CHANNEL = 'https://t.me/joinchat/ojOOaC4tqkU5MTVl';
+    const BACKUP_CAPTION = `💠 _Backup Channel_ :\n ➤ ${BACKUP_CHANNEL} \n\n♻️ _Other Channels_ :\n ➤ https://t.me/my\\_channels\\_list\\_official`;
+    const final_caption = DEF_CAPTION + URL_CAPTION + BACKUP_CAPTION;
+
+    ctx.telegram.sendAnimation(ctx.chat.id, fileUrl,
+        {
+            caption: final_caption,
+            parse_mode: 'markdown'
+        }
+    );
+});
+
+bot.command('droplink', async (ctx) => {
+    console.log('ctx==', ctx.message);
+    const video_name = ctx.message.reply_to_message.video.file_name || 'Telegram : @my_channels_list_official';
+    const video_size = ctx.message.reply_to_message.video.file_size || 0;
+    const video_duration = ctx.message.reply_to_message.video.duration || 0;
+
     if ((ctx.message.text).includes('note')) return ctx.reply('note accepted');
-    const URL = ctx.message.text;
+    
+    const URL = ctx.message.text.split(' ')[1];
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const shortURL = ctx.message.text.match(urlRegex);
 
@@ -201,23 +234,40 @@ bot.on('text', async (ctx) => {
         if (results.error) {
             return ctx.reply(results.error.msg);
         }
-        if (results.total > 0) return ctx.reply('Link is already available in database.');
+        if (results.total > 0) return func.sendReply(ctx, results);
 
         const uniqID = (new Date()).getTime().toString(36);
         const linkToShort = `https://droplink-bot.herokuapp.com/${uniqID}`;
 
         const response = await axios.get(`https://droplink.co/api?api=${process.env.DROPLINK_API_TOKEN}&url=${linkToShort}`);
         if (response.data.status === 'success') {
-            db.createData({ body: [response.data.shortenedUrl, URL, uniqID] })
+            db.createData({ body: [response.data.shortenedUrl, URL, uniqID, video_name, video_size, video_duration] })
                 .then((res) => {
                     if (res.err) {
                         ctx.reply('Something went wrong !!');
                         return console.log('errr', err);
                     }
-                    ctx.reply(response.data.shortenedUrl);
+
+                    const DEF_CAPTION = '🔰  *HOW TO DOWNLOAD* :\n\n➤  _Watch Video :_ [Download Trick](https://t.me/my\\_channels\\_list\\_official)\n➤  _Just Install PLAYit App from PlayStore_\n➤  🚀 _High Speed Download & No Buffering_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📥 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐋𝐢𝐧𝐤𝐬/👀𝐖𝐚𝐭𝐜𝐡 𝐎𝐧𝐥𝐢𝐧𝐞\n\n\n';
+                    let URL_CAPTION = `🎬 *Video Link*\n ➪ ${response.data.shortenedUrl}\n\n\n`;
+                    if (ctx.chat.id == '-1001518585169') {
+                        URL_CAPTION = '🔞️ *Screenshots/Preview/Trailer*\n ➪ Replace\\_Link\n\n' + URL_CAPTION;
+                    };
+                    let BACKUP_CHANNEL = 'https://t.me/joinchat/ojOOaC4tqkU5MTVl';
+                    const BACKUP_CAPTION = `💠 _Backup Channel_ :\n ➤ ${BACKUP_CHANNEL}\n\n♻️ _Other Channels_ :\n ➤ https://t.me/my\\_channels\\_list\\_official`;
+                    let final_caption = DEF_CAPTION + URL_CAPTION + BACKUP_CAPTION;
+
+                    const msg = 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4';
+
+                    ctx.telegram.sendAnimation(ctx.chat.id, msg,
+                        {
+                            caption: final_caption,
+                            parse_mode: 'markdown'
+                        }
+                    );
                 })
                 .catch(err => {
-                    ctx.reply(err)
+                    ctx.reply(err);
                 });
         }
     } else {
