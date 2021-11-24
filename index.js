@@ -286,8 +286,6 @@ async function downloadImage(url, path, ctx) {
         method: 'GET',
         responseType: 'stream'
     });
-    
-//     console.log('GET---response====', response.data)
 
     response.data.pipe(writer);
     
@@ -303,19 +301,18 @@ async function downloadImage(url, path, ctx) {
         const progress = showProgress(received_bytes, total_bytes);
         console.log('showProgress====', progress)
 
-//         ctx.editMessageText(progress, {
-//             parse_mode: 'markdown'
-//         });
+        ctx.telegram.editMessageText(ctx.chat.id, ctx.message.message_id + 1, '', progress);
     });
 
     return new Promise((resolve, reject) => {
         writer.on('finish', resolve)
         writer.on('error', reject)
-    })
+    });
 };
 
 bot.command('ffmpeg', async (ctx) => {
-    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
+    await ctx.reply('Getting ready to generate screenshots !!');
+    
     const URL = ctx.message.text.split(' ')[1];
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const shortURL = URL.match(urlRegex);
