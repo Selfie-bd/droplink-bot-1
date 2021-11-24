@@ -5,8 +5,8 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const axios = require('axios');
 const path = require('path');
 
-const db = require('./queries');
-const func = require('./functions');
+const db = require('./public/js/queries');
+const func = require('./public/js/functions');
 
 const { Client } = require('pg');
 const client = new Client({
