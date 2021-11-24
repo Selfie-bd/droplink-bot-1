@@ -199,13 +199,13 @@ bot.command('add_screenshot_link', (ctx) => {
 
 bot.command('short_to_droplink', async (ctx) => {
     await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
-    
+
     const video_name = ctx.message.reply_to_message.video.file_name || 'Telegram : @my_channels_list_official';
     const video_size = ctx.message.reply_to_message.video.file_size || 0;
     const video_duration = ctx.message.reply_to_message.video.duration || 0;
 
     if ((ctx.message.text).includes('note')) return ctx.reply('note accepted');
-    
+
     const URL = ctx.message.text.split(' ')[1];
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const shortURL = ctx.message.text.match(urlRegex);
@@ -231,10 +231,10 @@ bot.command('short_to_droplink', async (ctx) => {
                     }
 
                     const DEF_CAPTION = '🔰  *HOW TO DOWNLOAD* :\n\n➤  _Watch Video :_ [Download Trick](https://t.me/my\\_channels\\_list\\_official)\n➤  _Just Install PLAYit App from PlayStore_\n➤  🚀 _High Speed Download & No Buffering_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📥 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐋𝐢𝐧𝐤𝐬/👀𝐖𝐚𝐭𝐜𝐡 𝐎𝐧𝐥𝐢𝐧𝐞\n\n\n';
+                    
                     let URL_CAPTION = `🎬 *Video Link*\n ➪ ${response.data.shortenedUrl}\n\n\n`;
-                    if (ctx.chat.id == '-1001518585169') {
-                        URL_CAPTION = '🔞️ *Screenshots/Preview/Trailer*\n ➪ Replace\\_Link\n\n' + URL_CAPTION;
-                    };
+                    URL_CAPTION = '🔞️ *Screenshots/Preview/Trailer*\n ➪ Replace\\_Link\n\n' + URL_CAPTION;
+                    
                     let BACKUP_CHANNEL = 'https://t.me/joinchat/ojOOaC4tqkU5MTVl';
                     const BACKUP_CAPTION = `💠 _Backup Channel_ :\n ➤ ${BACKUP_CHANNEL}\n\n♻️ _Other Channels_ :\n ➤ https://t.me/my\\_channels\\_list\\_official`;
                     let final_caption = DEF_CAPTION + URL_CAPTION + BACKUP_CAPTION;
