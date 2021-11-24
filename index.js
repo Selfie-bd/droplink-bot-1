@@ -23,10 +23,12 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/', async (req, res) => {
+    console.log('req==========/=======', req);
     res.send('Welcome !!');
 });
 
 app.get('/:id', async (req, res) => {
+    console.log('req==========/id=======', req);
     if ((req.params.id).includes('.')) return;
     
     const results = await db.getDataByUniqId(req, res);
