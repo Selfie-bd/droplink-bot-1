@@ -24,11 +24,13 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/', async (req, res) => {
     console.log('req==========/=======', req);
+    console.log('res==========/=======', res);
     res.send('Welcome !!');
 });
 
 app.get('/:id', async (req, res) => {
     console.log('req==========/id=======', req);
+    console.log('res==========/id=======', res);
     if ((req.params.id).includes('.')) return;
     
     const results = await db.getDataByUniqId(req, res);
