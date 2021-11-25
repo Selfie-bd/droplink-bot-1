@@ -34,7 +34,6 @@ app.get('/:id', async (req, res) => {
     if ((req.params.id).includes('.')) return;
     
     const results = await db.getDataByUniqId(req);
-    console.log('res--', results);
     if (results.total > 0) {
         const intentUrl = results.data[0].org_url.replace(/(^\w+:|^)\/\//, '');
         res.render(path.join(__dirname + '/public/ejs/index.ejs'), {
