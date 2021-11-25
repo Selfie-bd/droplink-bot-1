@@ -11,7 +11,6 @@ const pool = new Pool({
 const getData = async () => {
     try {
         response = await pool.query('SELECT * FROM tg_droplink_data ORDER BY id ASC');
-        console.log('res', response)
         return { data: response.rows, total: response.rows.length };
     } catch (error) {
         throw { error: { msg: 'Something Went Wrong !!!', err: error } };
@@ -20,7 +19,6 @@ const getData = async () => {
 
 const getDataById = async (request) => {
     const id = parseInt(request.params.id);
-
     try {
         response = await pool.query('SELECT * FROM tg_droplink_data WHERE id = $1', [id]);
         return { data: response.rows, total: response.rows.length };
@@ -30,9 +28,7 @@ const getDataById = async (request) => {
 };
 
 const getDataByUniqId = async (request) => {
-    console.log('request.params', request.params)
-    const uniq_id = request.params.id
-
+    const uniq_id = request.params.id;
     try {
         response = await pool.query('SELECT * FROM tg_droplink_data WHERE uniq_id = $1', [uniq_id]);
         return { data: response.rows, total: response.rows.length };
@@ -42,9 +38,7 @@ const getDataByUniqId = async (request) => {
 };
 
 const getDataByOrgUrl = async (request) => {
-    console.log('request.params', request.params)
-    const url = request.params.url
-
+    const url = request.params.url;
     try {
         response = await pool.query('SELECT * FROM tg_droplink_data WHERE org_url = $1', [url]);
         return { data: response.rows, total: response.rows.length };
@@ -54,9 +48,7 @@ const getDataByOrgUrl = async (request) => {
 };
 
 const getDataByDroplink = async (request) => {
-    console.log('request.params', request.params)
-    const droplink = request.params.droplink
-
+    const droplink = request.params.droplink;
     try {
         response = await pool.query('SELECT * FROM tg_droplink_data WHERE droplink = $1', [droplink]);
         return { data: response.rows, total: response.rows.length };
@@ -67,7 +59,6 @@ const getDataByDroplink = async (request) => {
 
 const createData = async (request) => {
     const [ droplink, org_url, uniq_id, video_name, video_size, video_duration ] = request.body;
-
     try {
         response = await pool.query('INSERT INTO tg_droplink_data (droplink, org_url, uniq_id, video_name, video_size, video_duration) VALUES ($1, $2, $3, $4, $5, $6)', [droplink, org_url, uniq_id, video_name, video_size, video_duration]);
         return { data: response };
@@ -79,7 +70,6 @@ const createData = async (request) => {
 const updateData = async (request) => {
     const id = parseInt(request.params.id);
     const [ droplink, org_url, uniq_id ] = request.body;
-
     try {
         response = await pool.query('UPDATE tg_droplink_data SET droplink = $1, org_url = $2, uniq_id = $3 WHERE id = $4', [droplink, org_url, uniq_id, id]);
         return { data: response };
@@ -90,7 +80,6 @@ const updateData = async (request) => {
 
 const deleteData = async (request) => {
     const id = parseInt(request.params.id);
-
     try {
         response = await pool.query('DELETE FROM tg_droplink_data WHERE id = $1', [id]);
         return { data: response };
@@ -107,5 +96,5 @@ module.exports = {
     getDataByDroplink,
     createData,
     updateData,
-    deleteData,
+    deleteData
 };
