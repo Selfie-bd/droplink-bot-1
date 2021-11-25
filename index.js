@@ -236,7 +236,7 @@ bot.command('short_to_droplink', async (ctx) => {
                     let final_caption = DEF_CAPTION + URL_CAPTION + BACKUP_CAPTION;
 
                     ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
-                    ctx.telegram.sendAnimation(ctx.chat.id, msg,
+                    ctx.telegram.sendAnimation(ctx.chat.id, 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4',
                         {
                             caption: final_caption,
                             parse_mode: 'markdown'
