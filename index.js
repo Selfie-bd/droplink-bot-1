@@ -194,6 +194,20 @@ bot.command('animation_to_photo', (ctx) => {
     );
 });
 
+bot.command('convert_to_text', (ctx) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const shortURL = ctx.message.reply_to_message.caption.match(urlRegex);
+
+    if (shortURL === null) return ctx.replace('Something wrong with the url !!');
+
+    ctx.reply(func.getCaption(shortURL[0], 'https://t.me/joinchat/dWGuvl4DkbU4OTg9'),
+        {
+            parse_mode: 'markdown',
+            disable_web_page_preview: true
+        }
+    );
+});
+
 bot.command('short_to_droplink', async (ctx) => {
     const isAllowed = func.isAdmin(ctx);;
     if (!isAllowed.success) return ctx.reply(isAllowed.error);
