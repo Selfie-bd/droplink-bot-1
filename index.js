@@ -220,11 +220,8 @@ bot.command('short_to_droplink', async (ctx) => {
 
         const uniqID = (new Date()).getTime().toString(36);
         const linkToShort = `https://droplink-bot.herokuapp.com/${uniqID}`;
-        
-        console.log('linktoshort===', linkToShort)
 
         const response = await axios.get(`https://droplink.co/api?api=${process.env.DROPLINK_API_TOKEN}&url=${linkToShort}`);
-        console.log('response==', response.data)
         if (response.data.status === 'success') {
             db.createData({ body: [response.data.shortenedUrl, URL, uniqID, video_name, video_size, video_duration] })
                 .then((res) => {
@@ -232,8 +229,6 @@ bot.command('short_to_droplink', async (ctx) => {
                         ctx.reply('Something went wrong !!');
                         return console.log('errr', err);
                     }
-                    
-                    console.log('nana--', func.getCaption(response.data.shortenedUrl, 'https://t.me/joinchat/ojOOaC4tqkU5MTVl', true))
                     ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
                     ctx.telegram.sendAnimation(ctx.chat.id, 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4',
                         {
