@@ -61,7 +61,7 @@ const formatBytes = (bytes, decimals = 2) => {
 };
 
 const getCaption = (shortenLink, BACKUP_CHANNEL, isScreenshot=false) => {
-    const DEF_CAPTION = '🔰  *HOW TO DOWNLOAD* :\n\n➤  _Watch Video :_ [Download Trick](https://t.me/my\\_channels\\_list\\_official)\n➤  _Just Install PLAYit App from PlayStore_\n➤  🚀 _High Speed Download & No Buffering_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📥 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐋𝐢𝐧𝐤𝐬/👀𝐖𝐚𝐭𝐜𝐡 𝐎𝐧𝐥𝐢𝐧𝐞\n\n\n';
+    const DEF_CAPTION = '🔰  *HOW TO DOWNLOAD* :\n\n➤  _Watch Video :_ [Download Trick](https://t.me/how_to_download_movie_official/4)\n➤  _Just Install PLAYit App from PlayStore_\n➤  🚀 _High Speed Download & No Buffering_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📥 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐋𝐢𝐧𝐤𝐬/👀𝐖𝐚𝐭𝐜𝐡 𝐎𝐧𝐥𝐢𝐧𝐞\n\n\n';
     let URL_CAPTION = `🎬 *Video Link*\n ➪ ${shortenLink}\n\n\n`;
     if (isScreenshot) URL_CAPTION = '🔞️ *Screenshots/Preview/Trailer*\n ➪ Replace\\_Link\n\n' + URL_CAPTION;
     const BACKUP_CAPTION = `💠 _Backup Channel_ :\n ➤ ${BACKUP_CHANNEL}\n\n♻️ _Other Channels_ :\n ➤ https://t.me/my\\_channels\\_list\\_official`;
