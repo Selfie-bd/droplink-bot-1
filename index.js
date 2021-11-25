@@ -144,7 +144,7 @@ bot.command('get_by_uniqid', async (ctx) => {
 });
 
 bot.command('delete_data', async (ctx) => {
-    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgQAAxkBAAPhYYzeh51we7390tj603tUDDLFIGAAAuwJAAInyWhQvClj_JZUKPkiBA');
+    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
     const id = ctx.message.text.split('/delete_data ')[1];
 
     const results = await db.deleteData({ params: { id: `${Number(id)}` } });
