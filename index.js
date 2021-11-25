@@ -175,27 +175,14 @@ bot.command('get_all_data', async (ctx) => {
 
 // user commands
 
-bot.command('add_screenshot_link', (ctx) => {
-    const fileUrl = 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4';
-    const screenshotLink = ctx.message.text.split(' ')[1];
-    if (!screenshotLink) return;
+bot.command('animation_to_photo', (ctx) => {
+    const fileUrl = ctx.message.text.split(' ')[1] || 'https://1000logos.net/wp-content/uploads/2017/07/Brazzers-symbol.jpg';
+    if (!fileUrl) return ctx.reply('Something went wrong with URL');
 
-    const repliedCaption = ctx.message.reply_to_message.caption
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const allURLs = repliedCaption.match(urlRegex);
-
-    const notAvailable = "not\\_available";
-
-    const DEF_CAPTION = '🔰  *HOW TO DOWNLOAD* :\n\n➤  _Watch Video :_ [Download Trick](https://t.me/my_channels_list_official)\n➤  _Just Install PLAYit App from PlayStore_\n➤  🚀 _High Speed Download & No Buffering_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📥 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐋𝐢𝐧𝐤𝐬/👀𝐖𝐚𝐭𝐜𝐡 𝐎𝐧𝐥𝐢𝐧𝐞\n\n\n';
-    const URL_CAPTION = `🔞️ *Screenshots/Preview/Trailer*\n ➪ ${screenshotLink}\n\n🎬 *Video Link*\n ➪ ${allURLs[0] || notAvailable}\n\n\n`;
-    let BACKUP_CHANNEL = 'https://t.me/joinchat/ojOOaC4tqkU5MTVl';
-    const BACKUP_CAPTION = `💠 _Backup Channel_ :\n ➤ ${BACKUP_CHANNEL} \n\n♻️ _Other Channels_ :\n ➤ https://t.me/my\\_channels\\_list\\_official`;
-    const final_caption = DEF_CAPTION + URL_CAPTION + BACKUP_CAPTION;
-
-    ctx.telegram.sendAnimation(ctx.chat.id, fileUrl,
+    ctx.telegram.sendPhoto(ctx.chat.id, fileUrl,
         {
-            caption: final_caption,
-            parse_mode: 'markdown'
+            caption: ctx.message.reply_to_message.caption,
+            caption_entities: ctx.message.reply_to_message.caption_entities
         }
     );
 });
@@ -203,9 +190,15 @@ bot.command('add_screenshot_link', (ctx) => {
 bot.command('short_to_droplink', async (ctx) => {
     await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
 
-    const video_name = ctx.message.reply_to_message.video.file_name || 'Telegram : @my_channels_list_official';
-    const video_size = ctx.message.reply_to_message.video.file_size || 0;
-    const video_duration = ctx.message.reply_to_message.video.duration || 0;
+    let video_name = 'Telegram : @my_channels_list_official';
+    let video_size = 0;
+    let video_duration = 0;
+    
+    if (ctx.message.reply_to_message.video) {
+        video_name = ctx.message.reply_to_message.video.file_name;
+        video_size = ctx.message.reply_to_message.video.file_size;
+        video_duration = ctx.message.reply_to_message.video.duration;
+    }
 
     if ((ctx.message.text).includes('note')) return ctx.reply('note accepted');
 
@@ -234,15 +227,13 @@ bot.command('short_to_droplink', async (ctx) => {
                     }
 
                     const DEF_CAPTION = '🔰  *HOW TO DOWNLOAD* :\n\n➤  _Watch Video :_ [Download Trick](https://t.me/my\\_channels\\_list\\_official)\n➤  _Just Install PLAYit App from PlayStore_\n➤  🚀 _High Speed Download & No Buffering_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📥 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐋𝐢𝐧𝐤𝐬/👀𝐖𝐚𝐭𝐜𝐡 𝐎𝐧𝐥𝐢𝐧𝐞\n\n\n';
-                    
                     let URL_CAPTION = `🎬 *Video Link*\n ➪ ${response.data.shortenedUrl}\n\n\n`;
-                    URL_CAPTION = '🔞️ *Screenshots/Preview/Trailer*\n ➪ Replace\\_Link\n\n' + URL_CAPTION;
                     
+                    URL_CAPTION = '🔞️ *Screenshots/Preview/Trailer*\n ➪ Replace\\_Link\n\n' + URL_CAPTION;
+
                     let BACKUP_CHANNEL = 'https://t.me/joinchat/ojOOaC4tqkU5MTVl';
                     const BACKUP_CAPTION = `💠 _Backup Channel_ :\n ➤ ${BACKUP_CHANNEL}\n\n♻️ _Other Channels_ :\n ➤ https://t.me/my\\_channels\\_list\\_official`;
                     let final_caption = DEF_CAPTION + URL_CAPTION + BACKUP_CAPTION;
-
-                    const msg = 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4';
 
                     ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
                     ctx.telegram.sendAnimation(ctx.chat.id, msg,
