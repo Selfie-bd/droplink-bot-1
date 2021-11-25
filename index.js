@@ -237,7 +237,7 @@ bot.command('short_to_droplink', async (ctx) => {
                     ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
                     ctx.telegram.sendAnimation(ctx.chat.id, 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4',
                         {
-                            caption: func.getCaption(response.data.shortenedUrl, 'https://t.me/joinchat/ojOOaC4tqkU5MTVl', true);,
+                            caption: func.getCaption(response.data.shortenedUrl, 'https://t.me/joinchat/ojOOaC4tqkU5MTVl', true),
                             parse_mode: 'markdown'
                         }
                     );
