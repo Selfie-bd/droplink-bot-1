@@ -176,6 +176,9 @@ bot.command('get_all_data', async (ctx) => {
 // user commands
 
 bot.command('animation_to_photo', (ctx) => {
+    const isAllowed = func.isAdmin(ctx);;
+    if (!isAllowed.success) return ctx.reply(isAllowed.error);
+    
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const shortURL = ctx.message.reply_to_message.caption.match(urlRegex);
 
@@ -192,6 +195,9 @@ bot.command('animation_to_photo', (ctx) => {
 });
 
 bot.command('short_to_droplink', async (ctx) => {
+    const isAllowed = func.isAdmin(ctx);;
+    if (!isAllowed.success) return ctx.reply(isAllowed.error);
+    
     await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
 
     let video_name = 'Telegram : @my_channels_list_official';
@@ -295,6 +301,9 @@ async function downloadImage(url, path, ctx) {
 };
 
 bot.command('ffmpeg', async (ctx) => {
+    const isAllowed = func.isAdmin(ctx);;
+    if (!isAllowed.success) return ctx.reply(isAllowed.error);
+    
     const URL = ctx.message.text.split(' ')[1];
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const shortURL = URL.match(urlRegex);
