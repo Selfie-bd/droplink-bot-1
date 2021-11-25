@@ -275,6 +275,7 @@ function showProgress(received, total){
 async function downloadImage(url, path, ctx) {
     let received_bytes = 0;
     let total_bytes = 0;
+    let progress = 'downloading';
     
     const writer = fs.createWriteStream(path);
     
@@ -287,31 +288,20 @@ async function downloadImage(url, path, ctx) {
     response.data.pipe(writer);
     total_bytes = parseInt(response.headers['content-length']);
     
+    response.data.on('data', function (chunk) {
+        // Update the received bytes
+        received_bytes += chunk.length;
+        progress = showProgress(received_bytes, total_bytes);
+    });
+    
     let downloadTimer = setInterval(function () {
         if (received_bytes > 0 && total_bytes > 0 && received_bytes == total_bytes) {
-            console.log('if=============')
             clearInterval(downloadTimer);
-        } else {
-            console.log('received_bytes===========', received_bytes);
-            console.log('total_bytes===========', total_bytes);
-
-            response.data.on('data', function (chunk) {
-                // Update the received bytes
-                received_bytes += chunk.length;
-        
-                const progress = showProgress(received_bytes, total_bytes);
-                ctx.telegram.editMessageText(ctx.chat.id, ctx.message.message_id + 1, '', progress);
-            });
         }
-    }, 5000);
-    
-//     response.data.on('data', function(chunk) {
-//         // Update the received bytes
-//         received_bytes += chunk.length;
-
-//         const progress = showProgress(received_bytes, total_bytes);
-//         ctx.telegram.editMessageText(ctx.chat.id, ctx.message.message_id + 1, '', progress);
-//     });
+        const download_complete_msg = 'Downloading is completed ...\n\nNow getting ready to generate screenshots !!'
+        const msg = progress.includes('100') ? download_complete_msg : progress;
+        ctx.telegram.editMessageText(ctx.chat.id, ctx.message.message_id + 1, '', msg);
+    }, 2000);
 
     return new Promise((resolve, reject) => {
         writer.on('finish', resolve)
@@ -320,12 +310,14 @@ async function downloadImage(url, path, ctx) {
 };
 
 bot.command('ffmpeg', async (ctx) => {
-    await ctx.reply('Getting ready to generate screenshots !!');
-    
     const URL = ctx.message.text.split(' ')[1];
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const shortURL = URL.match(urlRegex);
-
+    
+    if (shortURL === null) return ctx.reply('Send valid link to generate screenshots !!');
+    
+    await ctx.reply('Downloading file to my server !!');
+    
     if(!fs.existsSync('uploads')) {
         fs.mkdirSync('uploads');
     };
@@ -338,10 +330,8 @@ bot.command('ffmpeg', async (ctx) => {
     if(!fs.existsSync('./uploads/Hello.mp4')) console.log('not-existed');
 
     try {
-        console.log('gone-in-try');
         ffmpeg('./uploads/Hello.mp4')
         .on('filenames', function(filenames) {
-            console.log('filenames', filenames);
             myScreenshots = filenames;
          })
         .on('end', async function() {
