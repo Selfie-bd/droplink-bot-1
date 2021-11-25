@@ -7,7 +7,6 @@ const path = require('path');
 
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
-// const ProgressBar = require('progress');
 
 const db = require('./public/js/queries');
 const func = require('./public/js/functions');
@@ -288,14 +287,31 @@ async function downloadImage(url, path, ctx) {
     response.data.pipe(writer);
     total_bytes = parseInt(response.headers['content-length']);
     
-    response.data.on('data', function(chunk) {
-        // Update the received bytes
-        received_bytes += chunk.length;
+    let downloadTimer = setInterval(function () {
+        if (received_bytes > 0 && total_bytes > 0 && received_bytes == total_bytes) {
+            console.log('if=============')
+            clearInterval(downloadTimer);
+        } else {
+            console.log('received_bytes===========', received_bytes);
+            console.log('total_bytes===========', total_bytes);
 
-        const progress = showProgress(received_bytes, total_bytes);
+            response.data.on('data', function (chunk) {
+                // Update the received bytes
+                received_bytes += chunk.length;
+        
+                const progress = showProgress(received_bytes, total_bytes);
+                ctx.telegram.editMessageText(ctx.chat.id, ctx.message.message_id + 1, '', progress);
+            });
+        }
+    }, 5000);
+    
+//     response.data.on('data', function(chunk) {
+//         // Update the received bytes
+//         received_bytes += chunk.length;
 
-        ctx.telegram.editMessageText(ctx.chat.id, ctx.message.message_id + 1, '', progress);
-    });
+//         const progress = showProgress(received_bytes, total_bytes);
+//         ctx.telegram.editMessageText(ctx.chat.id, ctx.message.message_id + 1, '', progress);
+//     });
 
     return new Promise((resolve, reject) => {
         writer.on('finish', resolve)
