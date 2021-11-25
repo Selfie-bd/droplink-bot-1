@@ -176,13 +176,17 @@ bot.command('get_all_data', async (ctx) => {
 // user commands
 
 bot.command('animation_to_photo', (ctx) => {
-    const fileUrl = ctx.message.text.split(' ')[1] || 'https://1000logos.net/wp-content/uploads/2017/07/Brazzers-symbol.jpg';
-    if (!fileUrl) return ctx.reply('Something went wrong with URL');
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const shortURL = ctx.message.reply_to_message.caption.match(urlRegex);
+
+    if (shortURL === null) return ctx.replace('Something wrong with the url !!');
+
+    const fileUrl = ctx.message.text.split(' ')[1] || 'https://telegra.ph/file/66a8bf28af4180fad2e70.jpg';
 
     ctx.telegram.sendPhoto(ctx.chat.id, fileUrl,
         {
-            caption: ctx.message.reply_to_message.caption,
-            caption_entities: ctx.message.reply_to_message.caption_entities
+            caption: func.getCaption(shortURL[0], 'https://t.me/joinchat/dWGuvl4DkbU4OTg9'),
+            parse_mode: 'markdown'
         }
     );
 });
@@ -226,14 +230,7 @@ bot.command('short_to_droplink', async (ctx) => {
                         return console.log('errr', err);
                     }
 
-                    const DEF_CAPTION = '🔰  *HOW TO DOWNLOAD* :\n\n➤  _Watch Video :_ [Download Trick](https://t.me/my\\_channels\\_list\\_official)\n➤  _Just Install PLAYit App from PlayStore_\n➤  🚀 _High Speed Download & No Buffering_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📥 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐋𝐢𝐧𝐤𝐬/👀𝐖𝐚𝐭𝐜𝐡 𝐎𝐧𝐥𝐢𝐧𝐞\n\n\n';
-                    let URL_CAPTION = `🎬 *Video Link*\n ➪ ${response.data.shortenedUrl}\n\n\n`;
-                    
-                    URL_CAPTION = '🔞️ *Screenshots/Preview/Trailer*\n ➪ Replace\\_Link\n\n' + URL_CAPTION;
-
-                    let BACKUP_CHANNEL = 'https://t.me/joinchat/ojOOaC4tqkU5MTVl';
-                    const BACKUP_CAPTION = `💠 _Backup Channel_ :\n ➤ ${BACKUP_CHANNEL}\n\n♻️ _Other Channels_ :\n ➤ https://t.me/my\\_channels\\_list\\_official`;
-                    let final_caption = DEF_CAPTION + URL_CAPTION + BACKUP_CAPTION;
+                    func.getCaption(response.data.shortenedUrl, 'https://t.me/joinchat/ojOOaC4tqkU5MTVl', true);
 
                     ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
                     ctx.telegram.sendAnimation(ctx.chat.id, 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4',
