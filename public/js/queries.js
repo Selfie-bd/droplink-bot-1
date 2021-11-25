@@ -68,10 +68,9 @@ const createData = async (request) => {
 };
 
 const updateData = async (request) => {
-    const id = parseInt(request.params.id);
-    const [ droplink, org_url, uniq_id ] = request.body;
+    const [ droplink, org_url, uniq_id, video_name, video_size, video_duration, id ] = request.body;
     try {
-        response = await pool.query('UPDATE tg_droplink_data SET droplink = $1, org_url = $2, uniq_id = $3 WHERE id = $4', [droplink, org_url, uniq_id, id]);
+        response = await pool.query('UPDATE tg_droplink_data SET droplink = $1, org_url = $2, uniq_id = $3, video_name = $4, video_size = $5, video_duration = $6 WHERE id = $7', [droplink, org_url, uniq_id, video_name, video_size, video_duration, id]);
         return { data: response };
     } catch (error) {
         throw { error: { msg: 'Something Went Wrong !!!', err: error } };
