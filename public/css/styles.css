@@ -83,6 +83,18 @@ ul {
         height: 250px;
     }
 }
+.file-details {
+    display: flex;
+    margin-bottom: 10px;
+}
+.file-name {
+    flex: 1;
+    font-weight: 600;
+}
+.file-info {
+    flex: 3;
+    line-break: anywhere;  
+}
 
 html { font-size: 62.5%; }
 body { font-size: 1em;}
