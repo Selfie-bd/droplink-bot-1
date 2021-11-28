@@ -145,7 +145,7 @@ bot.command('get_by_uniqid', async (ctx) => {
 
 bot.command('update_data', async (ctx) => {
     await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
-    const params = ctx.message.text.split(' ');
+    const params = ctx.message.text.split('  ');
     
     const video_name = ctx.message.reply_to_message.video.file_name;
     const video_size = ctx.message.reply_to_message.video.file_size;
