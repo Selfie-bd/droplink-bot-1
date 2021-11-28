@@ -214,30 +214,6 @@ bot.command('short_to_droplink', async (ctx) => {
     
     await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
     
-    const link = ctx.message.text.split(' ')[1];
-    
-    const nonRed = await ffmpeg.ffprobe(link, function(err, metadata) {
-            console.log('metadata=======', metadata);
-            console.log('error=====', err);
-            if(err) return err;
-            return metadata;
-        });
-    
-    console.log('data====', nonRed);
-    
-    const a = true;
-    
-    if(a) return;
-    
-    try {
-        ffmpeg.ffprobe(ctx.message.text.split(' ')[1], function(err, metadata) {
-            console.log('metadata=======', metadata);
-            console.log('error=====', err)
-        });
-    } catch (error) {
-        console.log('catch-errror=====', error)
-    }
-
     let video_name = 'Telegram : @my_channels_list_official';
     let video_size = 0;
     let video_duration = 0;
