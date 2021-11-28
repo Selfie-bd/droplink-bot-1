@@ -73,11 +73,9 @@ const createData = async (request) => {
 };
 
 const updateData = async (request) => {
+    console.log('updateData', request.body);
     let [ droplink, org_url, uniq_id, video_name, video_size, video_duration, id ] = request.body;
     id = Number(id);
-    
-    console.log('new one===', droplink, org_url, uniq_id, video_name, video_size, video_duration, id);
-    
     try {
         response = await pool.query('UPDATE tg_droplink_data SET droplink = $1, org_url = $2, uniq_id = $3, video_name = $4, video_size = $5, video_duration = $6 WHERE id = $7', [droplink, org_url, uniq_id, video_name, video_size, video_duration, id]);
         return { data: response };
