@@ -23,7 +23,7 @@ const sendReply = (ctx, results) => {
     }
     if (results.total > 0) {
         const res = results.data[0];
-        ctx.reply(`*Showing results from DB*\n\n*ID :* \`${res.id}\`\n\n*Uniq ID :* \`${res.uniq_id}\`\n\n*Original URL :* \`${res.org_url}\`\n\n*Droplink :* \`${res.droplink}\``, {
+        ctx.reply(`*Showing results from DB*\n\n*ID :* \`${res.id}\`\n\n*Uniq ID :* \`${res.uniq_id}\`\n\n*Original URL :* \`${res.org_url}\`\n\n*Droplink :* \`${res.droplink}\`\n\n*Video MetaData *{\n   *Name :* \`${res.video_name}\`\n   *Size :*  \`${res.video_size}\`\n   *Duration :*  \`${res.video_duration}\`\n}`, {
             parse_mode: 'markdown'
         });
     } else {
