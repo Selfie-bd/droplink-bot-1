@@ -143,6 +143,29 @@ bot.command('get_by_uniqid', async (ctx) => {
     return func.sendReply(ctx, results);
 });
 
+bot.command('update_data', async (ctx) => {
+    await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
+    const params = ctx.message.text.split(' ');
+    
+    const video_name = ctx.message.reply_to_message.video.file_name;
+    const video_size = ctx.message.reply_to_message.video.file_size;
+    const video_duration = ctx.message.reply_to_message.video.duration;
+
+    const droplink = params[0]
+    const org_url = params[1];
+    const uniq_id = params[2];
+    const id = params[3];
+
+    const results = await db.updateData({ body: [droplink, org_url, uniq_id, video_name, video_size, video_duration, id] });
+    console.log('update-resylts', results);
+    ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+
+    if (results.error) {
+        return ctx.reply(results.error.msg);
+    }
+    ctx.reply('Successfully Updated !!');
+});
+
 bot.command('delete_data', async (ctx) => {
     await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
     const id = ctx.message.text.split('/delete_data ')[1];
