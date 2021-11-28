@@ -218,7 +218,7 @@ bot.command('short_to_droplink', async (ctx) => {
     
     const nonRed = await ffmpeg.ffprobe(link);
     
-    console.log('data====', nonRed.data);
+    console.log('data====', nonRed);
     
     const a = true;
     
