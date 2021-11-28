@@ -216,7 +216,12 @@ bot.command('short_to_droplink', async (ctx) => {
     
     const link = ctx.message.text.split(' ')[1];
     
-    const nonRed = await ffmpeg.ffprobe(link);
+    const nonRed = await ffmpeg.ffprobe(link, function(err, metadata) {
+            console.log('metadata=======', metadata);
+            console.log('error=====', err);
+            if(err) return err;
+            return metadata;
+        });
     
     console.log('data====', nonRed);
     
