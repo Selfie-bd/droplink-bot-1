@@ -367,4 +367,57 @@ bot.command('ffmpeg', async (ctx) => {
     }  
 });
 
+bot.command('ffmpeg2', async (ctx) => {
+    const isAllowed = func.isAdmin(ctx);;
+    if (!isAllowed.success) return ctx.reply(isAllowed.error);
+    
+    const URL = ctx.message.text.split(' ')[1];
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const shortURL = URL.match(urlRegex);
+    
+    if (shortURL === null) return ctx.reply('Send valid link to generate screenshots !!');
+    
+    await ctx.reply('Downloading file to my server !!');
+    
+    if(!fs.existsSync('uploads')) {
+        fs.mkdirSync('uploads');
+    };
+//     const localFilePath = "./uploads/Hello.mp4"
+    let myScreenshots = [];
+//     console.log('file-is-going-to-be-saved', localFilePath);
+//     await downloadImage(shortURL[0], localFilePath, ctx);
+    console.log('file-is-saved');
+
+    if(!fs.existsSync('./uploads/Hello.mp4')) console.log('not-existed');
+
+    try {
+        ffmpeg(shortURL[0])
+        .on('filenames', function(filenames) {
+            myScreenshots = filenames;
+         })
+        .on('end', async function() {
+            console.log('Screenshots taken');
+            ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
+            const media = myScreenshots.map(ss => {
+                return {
+                    type: 'photo',
+                    media: { source : path.join(__dirname + `/downloads/${ss}`)},
+                    caption: ss
+                }
+            });
+            await ctx.telegram.sendMediaGroup(ctx.chat.id, media);
+         })
+        .on('error', function(err) {
+            console.error(err);
+         })
+        .screenshots({
+            count: process.env.SCREENSHOTS_COUNT,
+            folder: './downloads/'
+        });
+    }
+    catch (error){
+        console.log('try-catch-error',error)
+    }  
+});
+
 bot.launch();
