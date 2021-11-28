@@ -214,6 +214,8 @@ bot.command('short_to_droplink', async (ctx) => {
     
     await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
     
+    const link = ctx.message.text.split(' ')[1];
+    
     const nonRed = await ffmpeg.ffprobe(link);
     
     console.log('data====', nonRed.data);
