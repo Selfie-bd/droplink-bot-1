@@ -223,7 +223,7 @@ bot.command('short_to_droplink', async (ctx) => {
     if(a) return;
     
     try {
-        ffmpeg.ffprobe(link, function(err, metadata) {
+        ffmpeg.ffprobe(ctx.message.text.split(' ')[1], function(err, metadata) {
             console.log('metadata=======', metadata);
             console.log('error=====', err)
         });
