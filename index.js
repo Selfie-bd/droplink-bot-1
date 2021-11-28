@@ -382,16 +382,15 @@ bot.command('ffmpeg2', async (ctx) => {
     if(!fs.existsSync('uploads')) {
         fs.mkdirSync('uploads');
     };
-//     const localFilePath = "./uploads/Hello.mp4"
     let myScreenshots = [];
-//     console.log('file-is-going-to-be-saved', localFilePath);
 //     await downloadImage(shortURL[0], localFilePath, ctx);
-    console.log('file-is-saved');
-
-    if(!fs.existsSync('./uploads/Hello.mp4')) console.log('not-existed');
 
     try {
         ffmpeg(shortURL[0])
+        .on('progress', function(progress) {
+            console.log('progress====', progress)
+            console.log('Processing: ' + progress.percent + '% done');
+        })
         .on('filenames', function(filenames) {
             myScreenshots = filenames;
          })
