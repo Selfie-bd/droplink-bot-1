@@ -152,10 +152,10 @@ bot.command('update_data', async (ctx) => {
     const video_size = ctx.message.reply_to_message.video.file_size;
     const video_duration = ctx.message.reply_to_message.video.duration;
 
-    const droplink = params[0]
-    const org_url = params[1];
-    const uniq_id = params[2];
-    const id = params[3];
+    const droplink = params[1]
+    const org_url = params[2];
+    const uniq_id = params[3];
+    const id = params[4];
 
     const results = await db.updateData({ body: [droplink, org_url, uniq_id, video_name, video_size, video_duration, id] });
     console.log('update-resylts', results);
