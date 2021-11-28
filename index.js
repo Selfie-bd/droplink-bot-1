@@ -219,7 +219,7 @@ bot.command('short_to_droplink', async (ctx) => {
     let video_duration = 0;
     
     if (ctx.message.reply_to_message && ctx.message.reply_to_message.video) {
-        video_name = ctx.message.reply_to_message.video.file_name;
+        video_name = ctx.message.reply_to_message.video.file_name ? ctx.message.reply_to_message.video.file_name : video_name;
         video_size = ctx.message.reply_to_message.video.file_size;
         video_duration = ctx.message.reply_to_message.video.duration;
     }
