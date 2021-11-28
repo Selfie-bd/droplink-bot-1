@@ -213,6 +213,23 @@ bot.command('short_to_droplink', async (ctx) => {
     if (!isAllowed.success) return ctx.reply(isAllowed.error);
     
     await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
+    
+    const nonRed = await ffmpeg.ffprobe(link);
+    
+    console.log('data====', nonRed.data);
+    
+    const a = true;
+    
+    if(a) return;
+    
+    try {
+        ffmpeg.ffprobe(link, function(err, metadata) {
+            console.log('metadata=======', metadata);
+            console.log('error=====', err)
+        });
+    } catch (error) {
+        console.log('catch-errror=====', error)
+    }
 
     let video_name = 'Telegram : @my_channels_list_official';
     let video_size = 0;
