@@ -272,101 +272,6 @@ FFMPEG
 
 */
 
-function showProgress(received, total){
-    let percentage = (received * 100) / total;
-    return Number(percentage).toFixed(2) + "% | " + func.formatBytes(received) + " out of " + func.formatBytes(total) + " ."
-};
-
-async function downloadImage(url, path, ctx) {
-    let received_bytes = 0;
-    let total_bytes = 0;
-    let progress = 'downloading';
-    
-    const writer = fs.createWriteStream(path);
-    
-    const response = await axios({
-        url,
-        method: 'GET',
-        responseType: 'stream'
-    });
-
-    response.data.pipe(writer);
-    total_bytes = parseInt(response.headers['content-length']);
-    
-    response.data.on('data', function (chunk) {
-        // Update the received bytes
-        received_bytes += chunk.length;
-        progress = showProgress(received_bytes, total_bytes);
-    });
-    
-    let downloadTimer = setInterval(function () {
-        if (received_bytes > 0 && total_bytes > 0 && received_bytes == total_bytes) {
-            clearInterval(downloadTimer);
-        }
-        const download_complete_msg = 'Downloading is completed ...\n\nNow getting ready to generate screenshots !!'
-        const msg = progress.includes('100') ? download_complete_msg : progress;
-        ctx.telegram.editMessageText(ctx.chat.id, ctx.message.message_id + 1, '', msg);
-    }, 2000);
-
-    return new Promise((resolve, reject) => {
-        writer.on('finish', resolve)
-        writer.on('error', reject)
-    });
-};
-
-bot.command('ffmpeg', async (ctx) => {
-    const isAllowed = func.isAdmin(ctx);;
-    if (!isAllowed.success) return ctx.reply(isAllowed.error);
-    
-    const URL = ctx.message.text.split(' ')[1];
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-    const shortURL = URL.match(urlRegex);
-    
-    if (shortURL === null) return ctx.reply('Send valid link to generate screenshots !!');
-    
-    await ctx.reply('Downloading file to my server !!');
-    
-    if(!fs.existsSync('uploads')) {
-        fs.mkdirSync('uploads');
-    };
-    const localFilePath = "./uploads/Hello.mp4"
-    let myScreenshots = [];
-    console.log('file-is-going-to-be-saved', localFilePath);
-    await downloadImage(shortURL[0], localFilePath, ctx);
-    console.log('file-is-saved');
-
-    if(!fs.existsSync('./uploads/Hello.mp4')) console.log('not-existed');
-
-    try {
-        ffmpeg('./uploads/Hello.mp4')
-        .on('filenames', function(filenames) {
-            myScreenshots = filenames;
-         })
-        .on('end', async function() {
-            console.log('Screenshots taken');
-            ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
-            const media = myScreenshots.map(ss => {
-                return {
-                    type: 'photo',
-                    media: { source : path.join(__dirname + `/downloads/${ss}`)},
-                    caption: ss
-                }
-            });
-            await ctx.telegram.sendMediaGroup(ctx.chat.id, media);
-         })
-        .on('error', function(err) {
-            console.error(err);
-         })
-        .screenshots({
-            count: process.env.SCREENSHOTS_COUNT,
-            folder: './downloads/'
-        });
-    }
-    catch (error){
-        console.log('try-catch-error',error)
-    }  
-});
-
 bot.command('ffmpeg2', async (ctx) => {
     const isAllowed = func.isAdmin(ctx);;
     if (!isAllowed.success) return ctx.reply(isAllowed.error);
@@ -374,16 +279,16 @@ bot.command('ffmpeg2', async (ctx) => {
     const URL = ctx.message.text.split(' ')[1];
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const shortURL = URL.match(urlRegex);
+    console.log('shortURL======', shortURL);
     
     if (shortURL === null) return ctx.reply('Send valid link to generate screenshots !!');
-    
-    await ctx.reply('Downloading file to my server !!');
+    await ctx.reply('Getting ready to generate screenshots !!');
     
     if(!fs.existsSync('uploads')) {
         fs.mkdirSync('uploads');
     };
+    
     let myScreenshots = [];
-//     await downloadImage(shortURL[0], localFilePath, ctx);
 
     try {
         ffmpeg(shortURL[0])
