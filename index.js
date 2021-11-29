@@ -221,7 +221,7 @@ bot.command('convert_to_text', (ctx) => {
 
     if (shortURL === null) return ctx.replace('Something wrong with the url !!');
 
-    ctx.reply(func.getCaption(shortURL[0], 'https://t.me/joinchat/dWGuvl4DkbU4OTg9'),
+    ctx.reply(func.getCaption(shortURL[1], 'https://t.me/joinchat/dWGuvl4DkbU4OTg9'),
         {
             parse_mode: 'markdown',
             disable_web_page_preview: true
