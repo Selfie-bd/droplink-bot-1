@@ -64,7 +64,7 @@ const getCaption = (shortenLink, BACKUP_CHANNEL, isScreenshot=false) => {
     const DEF_CAPTION = '🔰  _HOW TO WATCH_ :\n\n➤  _Just Install PLAYit App from PlayStore_\n➤  🚀 _High Speed Download & No Buffering_\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📥 𝐃𝐨𝐰𝐧𝐥𝐨𝐚𝐝 𝐋𝐢𝐧𝐤𝐬/👀𝐖𝐚𝐭𝐜𝐡 𝐎𝐧𝐥𝐢𝐧𝐞\n\n\n';
     let URL_CAPTION = `❓️ _How To Download From \*DROPLINK\*_\n           (Droplink से वीडियो कैसे डाउनलोड करे) 👇🏻️\n➤ https://t.me/my\\_channels\\_list\\_official/4\n\n\n🎬 *Video Link*\n ➪ ${shortenLink}\n\n\n`;
     if (isScreenshot) URL_CAPTION = '🔞️ _Screenshots/Preview/Trailer_\n ➪ Replace\\_Link\n\n' + URL_CAPTION;
-    const BACKUP_CAPTION = `💠 _Backup Channel :\n ➤ ${BACKUP_CHANNEL}\n\n♻️ Other Channels :\n ➤ https://t.me/my\\_channels\\_list\\_official_`;
+    const BACKUP_CAPTION = `💠 _Backup Channel_ :\n _➤ ${BACKUP_CHANNEL}_\n\n♻️ _Other Channels :_\n ➤ _https://t.me/my\\_channels\\_list\\_official_`;
     return DEF_CAPTION + URL_CAPTION + BACKUP_CAPTION;
 };
 
