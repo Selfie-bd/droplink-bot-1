@@ -239,7 +239,7 @@ bot.command('add_screenshot_link', (ctx) => {
     const allURLs = repliedCaption.match(urlRegex);
     
     let newMessage = func.getCaption(allURLs[1], 'https://t.me/joinchat/ojOOaC4tqkU5MTVl', true);
-    newMessage = newMessage.replace('Replace_Link', screenshotLink);
+    newMessage = newMessage.replace('Replace\\_Link', screenshotLink);
 
     ctx.telegram.sendAnimation(ctx.chat.id, fileUrl,
         {
