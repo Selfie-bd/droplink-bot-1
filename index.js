@@ -229,6 +229,24 @@ bot.command('convert_to_text', (ctx) => {
     );
 });
 
+bot.command('add_screenshot_link', (ctx) => {
+    const fileUrl = 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4';
+    const screenshotLink = ctx.message.text.split(' ')[1];
+    if (!screenshotLink) return;
+
+    let repliedCaption = ctx.message.reply_to_message.caption;
+    console.log('before===', repliedCaption)
+    repliedCaption = ctx.message.reply_to_message.caption.replace('Replace_Link', screenshotLink);
+    console.log('after===', repliedCaption)
+
+    ctx.telegram.sendAnimation(ctx.chat.id, fileUrl,
+        {
+            caption: repliedCaption,
+            caption_entities: ctx.message.reply_to_message.caption_entities
+        }
+    );
+});
+
 bot.command('short_to_droplink', async (ctx) => {
     const isAllowed = func.isAdmin(ctx);;
     if (!isAllowed.success) return ctx.reply(isAllowed.error);
