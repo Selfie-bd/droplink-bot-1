@@ -233,11 +233,11 @@ bot.command('add_screenshot_link', (ctx) => {
     const fileUrl = 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4';
     const screenshotLink = ctx.message.text.split(' ')[1];
     if (!screenshotLink) return;
+    
+    console.log('ctx.message.reply_to_message======', ctx.message.reply_to_message)
 
     let repliedCaption = ctx.message.reply_to_message.caption;
-    console.log('before===', repliedCaption)
     repliedCaption = ctx.message.reply_to_message.caption.replace('Replace_Link', screenshotLink);
-    console.log('after===', repliedCaption)
 
     ctx.telegram.sendAnimation(ctx.chat.id, fileUrl,
         {
