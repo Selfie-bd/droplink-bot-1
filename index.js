@@ -233,15 +233,17 @@ bot.command('add_screenshot_link', (ctx) => {
     const fileUrl = 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4';
     const screenshotLink = ctx.message.text.split(' ')[1];
     if (!screenshotLink) return;
-    
-    console.log('ctx.message.reply_to_message======', ctx.message.reply_to_message)
 
-    let repliedCaption = ctx.message.reply_to_message.caption;
-    repliedCaption = ctx.message.reply_to_message.caption.replace('Replace_Link', screenshotLink);
+    const repliedCaption = ctx.message.reply_to_message.caption;
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const allURLs = repliedCaption.match(urlRegex);
+    
+    let newMessage = func.getCaption(allURLs[1], 'https://t.me/joinchat/ojOOaC4tqkU5MTVl');
+    newMessage = newMessage.replace('Replace_Link', screenshotLink);
 
     ctx.telegram.sendAnimation(ctx.chat.id, fileUrl,
         {
-            caption: repliedCaption,
+            caption: newMessage,
             parse_mode: 'markdown'
         }
     );
