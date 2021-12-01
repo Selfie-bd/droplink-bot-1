@@ -238,7 +238,7 @@ bot.command('add_screenshot_link', (ctx) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const allURLs = repliedCaption.match(urlRegex);
     
-    let newMessage = func.getCaption(allURLs[1], 'https://t.me/joinchat/ojOOaC4tqkU5MTVl');
+    let newMessage = func.getCaption(allURLs[1], 'https://t.me/joinchat/ojOOaC4tqkU5MTVl', true);
     newMessage = newMessage.replace('Replace_Link', screenshotLink);
 
     ctx.telegram.sendAnimation(ctx.chat.id, fileUrl,
