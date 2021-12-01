@@ -242,7 +242,7 @@ bot.command('add_screenshot_link', (ctx) => {
     ctx.telegram.sendAnimation(ctx.chat.id, fileUrl,
         {
             caption: repliedCaption,
-            caption_entities: ctx.message.reply_to_message.caption_entities
+            parse_mode: 'markdown'
         }
     );
 });
