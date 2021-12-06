@@ -68,12 +68,12 @@ Bot
 */
 
 bot.start((ctx) => {
-    ctx.reply(`Hi *${ctx.from.first_name}*!!\n\n🤖️ Official private bot of @temp\\_demo\nfor short URL to DropLink`, {
+    ctx.reply(`Hi *${ctx.from.first_name}*!!\n\n I am short URL to DropLink`, {
         parse_mode: 'markdown',
         reply_markup: {
             inline_keyboard: [
                 [
-                    { text: "📂 Join Our Main Channel", url: 'https://t.me/my_channels_list_official' }
+                    { text: "📂 Join Our Main Channel", url: 'https://t.me/groupdcbots' }
                 ],
                 [
                     { text: "Help 💡️", callback_data: 'help' }
@@ -255,7 +255,7 @@ bot.command('short_to_droplink', async (ctx) => {
     
     await ctx.telegram.sendAnimation(ctx.chat.id, 'CAACAgUAAxkBAAE08vdhnjeGdMhMHh4XH1PpyRoBQVba7AACrwEAAkglCVeK2COVlaQ2mSIE');
     
-    let video_name = 'Telegram : @my_channels_list_official';
+    let video_name = 'Telegram : @Groupdcbots';
     let video_size = 0;
     let video_duration = 0;
     
@@ -293,7 +293,7 @@ bot.command('short_to_droplink', async (ctx) => {
                     ctx.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id + 1);
                     ctx.telegram.sendAnimation(ctx.chat.id, 'https://telegra.ph/file/b23b9e5ed1107e8cfae09.mp4',
                         {
-                            caption: func.getCaption(response.data.shortenedUrl, 'https://t.me/joinchat/ojOOaC4tqkU5MTVl', true),
+                            caption: func.getCaption(response.data.shortenedUrl, 'https://t.me/groupdc', true),
                             parse_mode: 'markdown'
                         }
                     );
