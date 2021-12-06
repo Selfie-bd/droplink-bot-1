@@ -13,7 +13,7 @@ const getData = async () => {
         response = await pool.query('SELECT * FROM tg_droplink_data ORDER BY id ASC');
         return { data: response.rows, total: response.rows.length };
     } catch (error) {
-        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+        throw { error: { msg: 'Something Went Wrong! Contact @groupdc!!', err: error } };
     };
 };
 
@@ -24,7 +24,7 @@ const getDataById = async (request) => {
         response = await pool.query('SELECT * FROM tg_droplink_data WHERE id = $1', [id]);
         return { data: response.rows, total: response.rows.length };
     } catch (error) {
-        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+        throw { error: { msg: 'Something Went Wrong Contact @groupdc!!', err: error } };
     };
 };
 
@@ -35,7 +35,7 @@ const getDataByUniqId = async (request) => {
         response = await pool.query('SELECT * FROM tg_droplink_data WHERE uniq_id = $1', [uniq_id]);
         return { data: response.rows, total: response.rows.length };
     } catch (error) {
-        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+        throw { error: { msg: 'Something Went Wrong! Contact @groupdc!!', err: error } };
     };
 };
 
@@ -46,7 +46,7 @@ const getDataByOrgUrl = async (request) => {
         response = await pool.query('SELECT * FROM tg_droplink_data WHERE org_url = $1', [url]);
         return { data: response.rows, total: response.rows.length };
     } catch (error) {
-        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+        throw { error: { msg: 'Something Went Wrong! @groupdc!!', err: error } };
     };
 };
 
@@ -57,7 +57,7 @@ const getDataByDroplink = async (request) => {
         response = await pool.query('SELECT * FROM tg_droplink_data WHERE droplink = $1', [droplink]);
         return { data: response.rows, total: response.rows.length };
     } catch (error) {
-        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+        throw { error: { msg: 'Something Went Wrong! @groupdc!!', err: error } };
     };
 };
 
@@ -68,7 +68,7 @@ const createData = async (request) => {
         response = await pool.query('INSERT INTO tg_droplink_data (droplink, org_url, uniq_id, video_name, video_size, video_duration) VALUES ($1, $2, $3, $4, $5, $6)', [droplink, org_url, uniq_id, video_name, video_size, video_duration]);
         return { data: response };
     } catch (error) {
-        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+        throw { error: { msg: 'Something Went Wrong! @groupdc!!', err: error } };
     };
 };
 
@@ -80,7 +80,7 @@ const updateData = async (request) => {
         response = await pool.query('UPDATE tg_droplink_data SET droplink = $1, org_url = $2, uniq_id = $3, video_name = $4, video_size = $5, video_duration = $6 WHERE id = $7', [droplink, org_url, uniq_id, video_name, video_size, video_duration, id]);
         return { data: response };
     } catch (error) {
-        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+        throw { error: { msg: 'Something Went Wrong! @groupdc!!, err: error } };
     };
 };
 
@@ -91,7 +91,7 @@ const deleteData = async (request) => {
         response = await pool.query('DELETE FROM tg_droplink_data WHERE id = $1', [id]);
         return { data: response };
     } catch (error) {
-        throw { error: { msg: 'Something Went Wrong !!!', err: error } };
+        throw { error: { msg: 'Something Went Wrong! @groupdc!!', err: error } };
     };
 };
 
